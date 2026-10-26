@@ -1,8 +1,9 @@
 /* Order tracker. Every rule is scoped under .wt-tracker (the lightbox lives inside it). */
 
 .wt-tracker {
-  --wt-font-heading: var(--wt-fraunces), "Fraunces", Georgia, serif;
-  --wt-font-body: var(--wt-worksans), "Work Sans", system-ui, sans-serif;
+  /* The site's own fonts (loaded in app/layout.tsx): Instrument Serif headings, Inter body */
+  --wt-font-heading: var(--font-instrument), "Cormorant Garamond", Georgia, serif;
+  --wt-font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --wt-ink: #f6efe0;
   --wt-ink-2: #eadfc6;
   --wt-text: #2a1a10;
@@ -148,6 +149,45 @@
   margin: 0.8rem 0 0;
   color: var(--wt-soft);
   max-width: 34rem;
+}
+
+.wt-tracker h1,
+.wt-tracker h2,
+.wt-tracker h3,
+.wt-tracker .wt-status-line,
+.wt-tracker .wt-seal-num strong,
+.wt-tracker .wt-stagecard-num,
+.wt-tracker .wt-stagecard-name,
+.wt-tracker .wt-mark-num,
+.wt-tracker .wt-pin span,
+.wt-tracker .wt-frame--empty p {
+  font-weight: 400;
+  font-synthesis: none;
+}
+.wt-tracker .wt-title {
+  letter-spacing: -0.015em;
+  line-height: 1.02;
+}
+.wt-tracker .wt-h2 {
+  font-size: 1.65rem;
+}
+.wt-tracker .wt-h2--big {
+  font-size: 2.3rem;
+}
+.wt-tracker .wt-status-line {
+  font-size: 1.65rem;
+}
+.wt-tracker .wt-detail-title {
+  font-size: 2.35rem;
+}
+.wt-tracker .wt-stagecard-name {
+  font-size: 1.2rem;
+}
+.wt-tracker .wt-stagecard-num {
+  font-size: 3rem;
+}
+.wt-tracker .wt-seal-num strong {
+  font-size: 1.7rem;
 }
 
 /* ---------- Pill, badges, buttons ---------- */
@@ -1254,10 +1294,10 @@
     padding: 2.5rem 1.5rem 6rem;
   }
   .wt-tracker .wt-title {
-    font-size: clamp(2.6rem, 4.6vw, 3.8rem);
+    font-size: clamp(3rem, 5.4vw, 4.6rem);
   }
   .wt-tracker .wt-status-line {
-    font-size: 1.7rem;
+    font-size: 2rem;
   }
   .wt-tracker .wt-hero {
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
@@ -1274,7 +1314,7 @@
     bottom: -26px;
   }
   .wt-tracker .wt-seal-num strong {
-    font-size: 1.85rem;
+    font-size: 2.1rem;
   }
   .wt-tracker .wt-rail-nav {
     display: flex;

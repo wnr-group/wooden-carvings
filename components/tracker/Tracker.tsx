@@ -1,7 +1,6 @@
 "use client";
 
 import { Check, ChevronLeft, ChevronRight, MoveHorizontal, Maximize2 } from "lucide-react";
-import { Fraunces, Work_Sans } from "next/font/google";
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { TrackerLightbox, type LightboxState } from "@/components/tracker/TrackerLightbox";
 import {
@@ -15,9 +14,6 @@ import {
 import { formatDate } from "@/lib/format";
 import type { Order } from "@/types/order";
 import "@/components/tracker/tracker.css";
-
-const fraunces = Fraunces({ subsets: ["latin"], variable: "--wt-fraunces", display: "swap" });
-const workSans = Work_Sans({ subsets: ["latin"], variable: "--wt-worksans", display: "swap" });
 
 const STATE_LABEL = { completed: "Completed", current: "In progress", upcoming: "Not started" } as const;
 
@@ -254,7 +250,7 @@ export function Tracker({ order, onHelp }: { order: Order; onHelp: () => void })
       ref={rootRef}
       id="status"
       aria-labelledby="wt-title"
-      className={`wt-tracker ${fraunces.variable} ${workSans.variable}`}
+      className="wt-tracker"
     >
       <div className="wt-inner" key={order.id}>
         {/* ---------- Cinematic hero ---------- */}
