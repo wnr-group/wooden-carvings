@@ -2,10 +2,12 @@
 
 import { MotionConfig } from "motion/react";
 import { useState } from "react";
+import { CraftFilm } from "@/components/CraftFilm";
 import { DeliveryInfo } from "@/components/DeliveryInfo";
 import { DemoSwitcher } from "@/components/DemoSwitcher";
 import { Gallery } from "@/components/Gallery";
 import { Hero } from "@/components/Hero";
+import { ProcessFilm } from "@/components/ProcessFilm";
 import { ProductDetails } from "@/components/ProductDetails";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -30,9 +32,11 @@ export function TrackerExperience() {
       <SiteHeader onHelp={() => setSupportOpen(true)} />
       <main>
         <Hero order={order} />
+        <CraftFilm />
         <Tracker order={order} onHelp={() => setSupportOpen(true)} />
         <ProductDetails order={order} />
         <DeliveryInfo order={order} />
+        <ProcessFilm />
         <Gallery />
       </main>
       <SiteFooter onHelp={() => setSupportOpen(true)} />
