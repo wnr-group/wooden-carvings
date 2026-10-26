@@ -9,28 +9,41 @@ import { formatDateTime } from "@/lib/format";
 import { getStageViews, STAGE_STATE_LABEL, type StageView } from "@/lib/status";
 import type { Order } from "@/types/order";
 
+const pop = {
+  initial: { scale: 0.5, opacity: 0 },
+  whileInView: { scale: 1, opacity: 1 },
+  viewport: { once: true },
+  transition: { type: "spring", stiffness: 380, damping: 18 },
+} as const;
+
 function Marker({ stage }: { stage: StageView }) {
   if (stage.state === "completed") {
     return (
-      <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-forest text-ivory">
+      <motion.span
+        {...pop}
+        className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-forest text-ivory"
+      >
         <Check className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
-      </span>
+      </motion.span>
     );
   }
   if (stage.state === "current") {
     return (
-      <span className="relative z-10 flex h-8 w-8 items-center justify-center">
+      <motion.span {...pop} className="relative z-10 flex h-8 w-8 items-center justify-center">
         <span className="soft-pulse absolute inset-0 rounded-full bg-oak" aria-hidden="true" />
         <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-walnut">
           <span className="h-2.5 w-2.5 rounded-full bg-ivory" aria-hidden="true" />
         </span>
-      </span>
+      </motion.span>
     );
   }
   return (
-    <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border border-stone bg-ivory text-xs font-medium text-muted-strong">
+    <motion.span
+      {...pop}
+      className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border border-stone bg-ivory text-xs font-medium text-muted-strong"
+    >
       {stage.index + 1}
-    </span>
+    </motion.span>
   );
 }
 
@@ -57,10 +70,14 @@ function TimelineItem({ stage, isLast, order }: { stage: StageView; isLast: bool
       <div className="relative flex justify-center">
         <Marker stage={stage} />
         {!isLast && (
-          <span
+          <motion.span
             aria-hidden="true"
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+            transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className={cn(
-              "absolute top-9 -bottom-3 left-1/2 w-px -translate-x-1/2",
+              "absolute top-9 -bottom-3 left-1/2 w-px origin-top -translate-x-1/2",
               nextDone
                 ? "bg-forest"
                 : "bg-[repeating-linear-gradient(to_bottom,var(--oak)_0_4px,transparent_4px_10px)]",

@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "motion/react";
 import { STAGES } from "@/data/stages";
 import { cn } from "@/lib/cn";
 import { TOTAL_STAGES, type StageView } from "@/lib/status";
@@ -28,13 +31,19 @@ export function ProgressSteps({ current }: { current: StageView }) {
               </span>
               <span
                 aria-hidden="true"
-                className={cn(
-                  "block h-1 rounded-full",
-                  done && "bg-forest",
-                  active && "bg-walnut",
-                  !done && !active && "bg-stone",
-                )}
-              />
+                className="block h-1 overflow-hidden rounded-full bg-stone"
+              >
+                <motion.span
+                  className={cn(
+                    "block h-full origin-left rounded-full",
+                    done && "bg-forest",
+                    active && "bg-walnut",
+                  )}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: done || active ? 1 : 0 }}
+                  transition={{ duration: 0.7, delay: 0.5 + i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                />
+              </span>
             </li>
           );
         })}

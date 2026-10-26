@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { useRef } from "react";
 import { CopyButton } from "@/components/CopyButton";
 import { ProgressSteps } from "@/components/ProgressSteps";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -10,7 +11,16 @@ import { formatDate } from "@/lib/format";
 import { getCurrentStage, isDelivered, STAGE_STATE_LABEL } from "@/lib/status";
 import type { Order } from "@/types/order";
 
+const EASE = [0.22, 1, 0.36, 1] as const;
+
 export function Hero({ order }: { order: Order }) {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: frameRef,
+    offset: ["start end", "end start"],
+  });
+  const parallaxY = useTransform(scrollYProgress, [0, 1], ["-4%", "4%"]);
   const current = getCurrentStage(order);
   const delivered = isDelivered(order);
 
@@ -21,21 +31,48 @@ export function Hero({ order }: { order: Order }) {
       className="mx-auto grid max-w-[1320px] gap-x-16 gap-y-8 px-5 pb-16 pt-8 sm:px-8 lg:grid-cols-12 lg:px-12 lg:pb-28 lg:pt-14"
     >
       <div className="lg:col-span-7 lg:row-start-1">
-        <p className="text-[0.72rem] font-medium uppercase tracking-[0.3em] text-muted-strong">
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: EASE }}
+          className="text-[0.72rem] font-medium uppercase tracking-[0.3em] text-muted-strong"
+        >
           Your order journey
-        </p>
+        </motion.p>
         <h1
           id="hero-title"
           className="mt-5 font-display text-[clamp(2.9rem,8.2vw,6.1rem)] leading-[0.98] tracking-[-0.015em] text-charcoal"
         >
-          Crafted with care.
-          <br />
-          <em className="text-walnut">Made for you.</em>
+          <span className="block overflow-hidden pb-[0.1em]">
+            <motion.span
+              className="block"
+              initial={{ y: "105%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
+            >
+              Crafted with care.
+            </motion.span>
+          </span>
+          <span className="block overflow-hidden pb-[0.18em]">
+            <motion.em
+              className="block text-walnut"
+              initial={{ y: "105%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.9, delay: 0.25, ease: EASE }}
+            >
+              Made for you.
+            </motion.em>
+          </span>
         </h1>
-        <p className="mt-6 max-w-[34rem] text-base leading-relaxed text-muted-strong sm:text-lg">
+        <motion.p
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5, ease: EASE }}
+          className="mt-6 max-w-[34rem] text-base leading-relaxed text-muted-strong sm:text-lg"
+        >
           Follow your piece from the first cut to your doorstep. This page shows
           where your order stands today, and what comes next.
-        </p>
+        </motion.p>
         <p className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 lg:hidden">
           <StatusBadge
             state={current.state === "completed" ? "completed" : "current"}
@@ -52,13 +89,17 @@ export function Hero({ order }: { order: Order }) {
       </div>
 
       <figure className="lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1">
-        <div className="relative aspect-[5/4] overflow-hidden rounded-[2px] bg-stone sm:aspect-[16/10] lg:aspect-[4/5]">
+        <div ref={frameRef} className="relative aspect-[5/4] overflow-hidden rounded-[2px] bg-stone sm:aspect-[16/10] lg:aspect-[4/5]">
           <motion.div
             className="absolute inset-0"
             initial={{ scale: 1.06 }}
             animate={{ scale: 1 }}
-            transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 1.6, ease: EASE }}
           >
+            <motion.div
+              className="absolute inset-x-0 -inset-y-[6%]"
+              style={reduced ? undefined : { y: parallaxY }}
+            >
             <Image
               src={heroImage.src}
               alt={heroImage.alt}
@@ -68,6 +109,7 @@ export function Hero({ order }: { order: Order }) {
               sizes="(min-width: 1024px) 40vw, 100vw"
               className="object-cover object-[50%_6%] sm:object-[50%_14%] lg:object-[50%_22%]"
             />
+            </motion.div>
           </motion.div>
           <motion.div
             aria-hidden="true"

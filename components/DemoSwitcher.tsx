@@ -1,6 +1,7 @@
 "use client";
 
 import { FlaskConical, X } from "lucide-react";
+import { motion } from "motion/react";
 import { useState } from "react";
 import { orders } from "@/data/orders";
 import { cn } from "@/lib/cn";
@@ -19,7 +20,10 @@ export function DemoSwitcher({ value, onChange }: DemoSwitcherProps) {
   return (
     <div className="fixed bottom-4 left-4 z-40 max-w-[calc(100vw-2rem)]">
       {open ? (
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 10, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.25 }}
           role="group"
           aria-label="Prototype preview: choose a sample order"
           className="w-[17.5rem] rounded-[10px] border border-stone bg-paper p-4 shadow-[0_12px_40px_-12px_rgb(23_23_20/0.35)]"
@@ -64,17 +68,19 @@ export function DemoSwitcher({ value, onChange }: DemoSwitcherProps) {
               );
             })}
           </div>
-        </div>
+        </motion.div>
       ) : (
-        <button
+        <motion.button
           type="button"
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
           onClick={() => setOpen(true)}
           aria-expanded={false}
           className="inline-flex h-11 items-center gap-2 rounded-full border border-stone bg-paper px-4 text-xs font-medium text-walnut shadow-[0_8px_24px_-10px_rgb(23_23_20/0.35)] transition-colors hover:border-walnut"
         >
           <FlaskConical className="h-4 w-4" aria-hidden="true" />
           Demo preview
-        </button>
+        </motion.button>
       )}
     </div>
   );

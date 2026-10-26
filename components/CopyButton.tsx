@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, Copy } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 
@@ -59,8 +60,10 @@ export function CopyButton({ value, label, tone = "dark", className }: CopyButto
 
   return (
     <span className="inline-flex items-center gap-2">
-      <button
+      <motion.button
         type="button"
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.9 }}
         onClick={copy}
         aria-label={label}
         className={cn(
@@ -71,12 +74,23 @@ export function CopyButton({ value, label, tone = "dark", className }: CopyButto
           className,
         )}
       >
-        {state === "copied" ? (
-          <Check className="h-4 w-4" aria-hidden="true" />
-        ) : (
-          <Copy className="h-4 w-4" aria-hidden="true" />
-        )}
-      </button>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={state === "copied" ? "check" : "copy"}
+            initial={{ scale: 0.4, opacity: 0, rotate: -30 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            exit={{ scale: 0.4, opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            className="flex"
+          >
+            {state === "copied" ? (
+              <Check className="h-4 w-4" aria-hidden="true" />
+            ) : (
+              <Copy className="h-4 w-4" aria-hidden="true" />
+            )}
+          </motion.span>
+        </AnimatePresence>
+      </motion.button>
       <span
         role="status"
         aria-live="polite"

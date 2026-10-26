@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { motion } from "motion/react";
 import { useState, type FormEvent } from "react";
 import { CopyButton } from "@/components/CopyButton";
 import { Sheet } from "@/components/Sheet";
@@ -84,12 +85,14 @@ export function SupportDialog({ open, onClose, reference }: SupportDialogProps) 
                 placeholder="Ask about your order, delivery or finish."
               />
             </div>
-            <button
+            <motion.button
               type="submit"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
               className="inline-flex h-12 w-full items-center justify-center rounded-full bg-walnut px-6 text-sm font-medium text-ivory transition-colors hover:bg-charcoal"
             >
               Send message (demo)
-            </button>
+            </motion.button>
           </form>
         )}
       </div>
