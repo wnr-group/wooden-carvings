@@ -4,7 +4,6 @@ import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import { CopyButton } from "@/components/CopyButton";
-import { ProgressSteps } from "@/components/ProgressSteps";
 import { StatusBadge } from "@/components/StatusBadge";
 import { heroImage } from "@/data/gallery";
 import { formatDate } from "@/lib/format";
@@ -180,8 +179,7 @@ export function Hero({ order }: { order: Order }) {
             </div>
           </dl>
           <div className="mt-7 border-t border-stone pt-6">
-            <ProgressSteps current={current} />
-            <p className="mt-4 text-sm leading-relaxed text-muted-strong">
+            <p className="text-sm leading-relaxed text-muted-strong">
               {current.description}
             </p>
           </div>

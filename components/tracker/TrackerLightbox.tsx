@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect, useRef, type KeyboardEvent, type MouseEvent, type TouchEvent } from "react";
 import type { TrackerPhoto } from "@/components/tracker/trackerData";
 
@@ -69,7 +70,7 @@ export function TrackerLightbox({ state, onChange, onClose }: TrackerLightboxPro
       <div className="wt-lb-frame" onClick={onBackdropClick}>
         <div className="wt-lb-bar">
           <button type="button" className="wt-lb-btn" onClick={onClose} aria-label="Close photo viewer">
-            ✕
+            <X />
           </button>
         </div>
         <div
@@ -80,14 +81,14 @@ export function TrackerLightbox({ state, onChange, onClose }: TrackerLightboxPro
         >
           {photos.length > 1 && (
             <button type="button" className="wt-lb-btn wt-lb-prev" onClick={() => go(-1)} aria-label="Previous photo">
-              ‹
+              <ChevronLeft />
             </button>
           )}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={photo.src} alt={photo.alt} />
           {photos.length > 1 && (
             <button type="button" className="wt-lb-btn wt-lb-next" onClick={() => go(1)} aria-label="Next photo">
-              ›
+              <ChevronRight />
             </button>
           )}
         </div>
