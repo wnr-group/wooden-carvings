@@ -1,0 +1,38 @@
+import type { Metadata, Viewport } from "next";
+import { Inter, Instrument_Serif } from "next/font/google";
+import "./globals.css";
+
+const instrument = Instrument_Serif({
+  variable: "--font-instrument",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: "Order Tracking | VK Wood Carvings",
+  description:
+    "Follow the journey of your handcrafted piece from workshop to doorstep. Prototype with sample data.",
+  robots: { index: false, follow: false },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#F8F6F1",
+  width: "device-width",
+  initialScale: 1,
+};
+
+export default function RootLayout({ children }: LayoutProps<"/">) {
+  return (
+    <html lang="en" className={`${instrument.variable} ${inter.variable}`}>
+      <body className="min-h-screen antialiased">{children}</body>
+    </html>
+  );
+}
