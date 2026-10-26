@@ -5,6 +5,7 @@ import { useState } from "react";
 import { CraftFilm } from "@/components/CraftFilm";
 import { DeliveryInfo } from "@/components/DeliveryInfo";
 import { DemoSwitcher } from "@/components/DemoSwitcher";
+import { FinishFilm } from "@/components/FinishFilm";
 import { Gallery } from "@/components/Gallery";
 import { Hero } from "@/components/Hero";
 import { ProcessFilm } from "@/components/ProcessFilm";
@@ -37,6 +38,7 @@ export function TrackerExperience() {
         <ProductDetails order={order} />
         <DeliveryInfo order={order} />
         <ProcessFilm />
+        <FinishFilm />
         <Gallery />
       </main>
       <SiteFooter onHelp={() => setSupportOpen(true)} />
