@@ -20,7 +20,7 @@ export function SiteHeader({ onHelp }: { onHelp: () => void }) {
   return (
     <header className="sticky top-0 z-30 border-b border-stone/80 bg-ivory/92 backdrop-blur-md">
       <div className="mx-auto flex h-[4.5rem] max-w-[1320px] items-center justify-between gap-4 px-5 sm:px-8 lg:px-12">
-        <a href="#status" aria-label="VK Wood Carvings, order tracking home" className="shrink-0">
+        <a href="#top" aria-label="VK Wood Carvings home" className="shrink-0">
           <Wordmark />
         </a>
 

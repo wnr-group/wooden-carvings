@@ -1,9 +1,8 @@
-import { galleryItems, heroImage } from "@/data/gallery";
+import { galleryItems } from "@/data/gallery";
 import { Wordmark } from "@/components/Wordmark";
 import type { PhotoCredit } from "@/types/order";
 
 const credits: { label: string; credit: PhotoCredit }[] = [
-  { label: "Hero", credit: heroImage.credit },
   ...galleryItems.map((g) => ({ label: g.title, credit: g.credit })),
 ];
 
