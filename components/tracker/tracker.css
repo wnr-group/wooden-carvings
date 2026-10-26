@@ -1,0 +1,612 @@
+/* Order tracker. Every rule is scoped under .wt-tracker (the lightbox lives inside it). */
+
+.wt-tracker {
+  --wt-font-heading: var(--wt-fraunces), "Fraunces", Georgia, serif;
+  --wt-font-body: var(--wt-worksans), "Work Sans", system-ui, sans-serif;
+  --wt-bg: #f4ecdb;
+  --wt-text: #241812;
+  --wt-heading: #33200f;
+  --wt-muted: #4a3a2c;
+  --wt-card: #fbf7ee;
+  --wt-border: #ddccab;
+  --wt-border-soft: #e7dcc0;
+  --wt-accent: #8a3a29;
+  --wt-gold: #b3823e;
+  --wt-label-bg: #f3e3c6;
+  --wt-success: #3f8a4d;
+  --wt-success-text: #245c30;
+  --wt-success-bg: #dcefe0;
+  --wt-progress-text: #8a5a12;
+  --wt-progress-bg: #f6e7c8;
+  --wt-neutral-bg: #eee4cd;
+  --wt-pending-icon: #b9a985;
+  --wt-btn-text: #fff6ee;
+  --wt-whatsapp: #25d366;
+  --wt-shadow-hero: 0 20px 45px -22px rgba(32, 19, 10, 0.45);
+
+  background: var(--wt-bg);
+  color: var(--wt-text);
+  font-family: var(--wt-font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 400;
+  padding: 2.5rem 1rem 5rem;
+  overflow-x: clip;
+}
+
+.wt-tracker *,
+.wt-tracker *::before,
+.wt-tracker *::after {
+  box-sizing: border-box;
+}
+
+.wt-tracker .wt-inner {
+  max-width: 880px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.wt-tracker :focus-visible {
+  outline: 2px solid var(--wt-accent);
+  outline-offset: 3px;
+}
+
+/* ---------- Typography ---------- */
+.wt-tracker h1,
+.wt-tracker h2,
+.wt-tracker h3 {
+  font-family: var(--wt-font-heading);
+  color: var(--wt-heading);
+  margin: 0;
+}
+.wt-tracker .wt-title {
+  font-size: 1.9rem;
+  font-weight: 560;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin-top: 0.7rem;
+}
+.wt-tracker .wt-h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.wt-tracker .wt-h2--journey {
+  font-size: 1.5rem;
+}
+.wt-tracker .wt-h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.wt-tracker .wt-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--wt-muted);
+  margin: 0;
+}
+.wt-tracker .wt-meta {
+  font-size: 0.86rem;
+  color: var(--wt-muted);
+  margin: 0;
+}
+.wt-tracker .wt-caption {
+  font-size: 0.86rem;
+  color: var(--wt-muted);
+  margin: 0.7rem 0 0;
+}
+
+/* ---------- Pill, badges, buttons ---------- */
+.wt-tracker .wt-pill {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wt-accent);
+  background: var(--wt-label-bg);
+  border: 1px solid var(--wt-border);
+  border-radius: 20px;
+  padding: 0.29rem 0.72rem;
+}
+.wt-tracker .wt-badge {
+  display: inline-block;
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  border-radius: 999px;
+  padding: 0.18rem 0.58rem;
+  color: var(--wt-muted);
+  background: var(--wt-neutral-bg);
+  white-space: nowrap;
+}
+.wt-tracker .wt-badge--done {
+  color: var(--wt-success-text);
+  background: var(--wt-success-bg);
+}
+.wt-tracker .wt-badge--current {
+  color: var(--wt-progress-text);
+  background: var(--wt-progress-bg);
+}
+
+.wt-tracker .wt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  cursor: pointer;
+  border: 0;
+  border-radius: 999px;
+  font-family: inherit;
+  text-decoration: none;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+.wt-tracker .wt-btn:hover {
+  filter: brightness(1.08);
+}
+.wt-tracker .wt-btn:active {
+  transform: scale(0.97);
+}
+.wt-tracker .wt-btn--review {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--wt-btn-text);
+  background: var(--wt-accent);
+  padding: 0.39rem 0.82rem;
+}
+.wt-tracker .wt-btn--wa {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #fff;
+  background: #128c4a; /* darker than --wt-whatsapp so white text stays AA */
+  padding: 0.6rem 1.23rem;
+}
+.wt-tracker .wt-btn--copy {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--wt-accent);
+  background: transparent;
+  border: 1px solid var(--wt-border);
+  padding: 0.3rem 0.9rem;
+}
+.wt-tracker .wt-btn--copy:hover {
+  background: var(--wt-label-bg);
+  filter: none;
+}
+.wt-tracker .wt-btn svg {
+  width: 1.1em;
+  height: 1.1em;
+  flex-shrink: 0;
+}
+
+/* ---------- Cards ---------- */
+.wt-tracker .wt-card {
+  background: var(--wt-card);
+  border: 1px solid var(--wt-border-soft);
+  border-radius: 10px;
+  padding: 1.1rem 1.3rem;
+}
+.wt-tracker .wt-card--hero {
+  border-color: var(--wt-border);
+  box-shadow: var(--wt-shadow-hero);
+}
+.wt-tracker .wt-card--ref {
+  border-left: 3px solid #b3823e;
+}
+.wt-tracker .wt-card--current {
+  border-color: var(--wt-gold);
+}
+.wt-tracker .wt-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+.wt-tracker .wt-card > .wt-h2 + .wt-photos,
+.wt-tracker .wt-card > .wt-card-head + .wt-photos {
+  margin-top: 0.9rem;
+}
+
+/* Status hero */
+.wt-tracker .wt-hero-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.wt-tracker .wt-status-line {
+  font-family: var(--wt-font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--wt-heading);
+  margin: 0;
+  line-height: 1.3;
+}
+.wt-tracker .wt-progress {
+  height: 10px;
+  margin-top: 0.95rem;
+  border-radius: 999px;
+  background: var(--wt-border-soft);
+  overflow: hidden;
+}
+.wt-tracker .wt-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #b3823e, #8a3a29);
+  transform-origin: left center;
+  animation: wt-grow 0.9s ease-out both;
+}
+@keyframes wt-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.wt-tracker .wt-progress-text {
+  margin: 0.6rem 0 0;
+  font-size: 0.86rem;
+  color: var(--wt-muted);
+}
+.wt-tracker .wt-progress-text strong {
+  color: var(--wt-heading);
+}
+
+/* ---------- Photos ---------- */
+.wt-tracker .wt-photos {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin-top: 0.7rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--wt-border) transparent;
+}
+.wt-tracker .wt-thumb {
+  flex: 0 0 110px;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: zoom-in;
+  background: var(--wt-border-soft);
+}
+.wt-tracker .wt-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+.wt-tracker .wt-thumb:hover img {
+  transform: scale(1.04);
+}
+
+/* ---------- Timeline ---------- */
+.wt-tracker .wt-timeline {
+  position: relative;
+  list-style: none;
+  margin: 1.1rem 0 0;
+  padding: 0;
+}
+.wt-tracker .wt-timeline::before {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 18px;
+  bottom: 18px;
+  width: 2px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--wt-border) 0 5px,
+    transparent 5px 10px
+  );
+}
+.wt-tracker .wt-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 14px;
+  padding-bottom: 24px;
+}
+.wt-tracker .wt-step:last-child {
+  padding-bottom: 0;
+}
+/* Solid gold segment from a completed stage down to the next one */
+.wt-tracker .wt-step--completed:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 18px;
+  bottom: -18px;
+  width: 2px;
+  background: var(--wt-gold);
+}
+.wt-tracker .wt-icon {
+  position: relative;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.6px solid var(--wt-border);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+}
+.wt-tracker .wt-icon--completed {
+  background: var(--wt-success);
+  border-color: var(--wt-success);
+  color: #fff;
+}
+.wt-tracker .wt-icon--current {
+  border-color: var(--wt-gold);
+}
+.wt-tracker .wt-icon--current::before {
+  content: "";
+  position: absolute;
+  inset: -1.6px;
+  border-radius: 50%;
+  border: 1.6px solid var(--wt-gold);
+  animation: wt-pulse 2.2s ease-out infinite;
+}
+.wt-tracker .wt-icon-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--wt-gold);
+}
+.wt-tracker .wt-icon--upcoming {
+  color: var(--wt-pending-icon);
+}
+@keyframes wt-pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.wt-tracker .wt-stage {
+  min-width: 0;
+  background: var(--wt-card);
+  border: 1px solid var(--wt-border-soft);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+}
+.wt-tracker .wt-stage--upcoming {
+  opacity: 0.75;
+}
+.wt-tracker .wt-stage-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+.wt-tracker .wt-stage-head .wt-badge {
+  margin-top: 0.15rem;
+}
+.wt-tracker .wt-stage .wt-meta {
+  margin-top: 0.15rem;
+}
+.wt-tracker .wt-stage-body {
+  margin-top: 0.7rem;
+  font-size: 0.92rem;
+  color: var(--wt-muted);
+}
+.wt-tracker .wt-stage-body p {
+  margin: 0 0 0.6rem;
+}
+.wt-tracker .wt-ship {
+  display: grid;
+  gap: 0.15rem 1rem;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  margin: 0.7rem 0 0;
+  font-size: 0.92rem;
+}
+.wt-tracker .wt-ship dt {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--wt-muted);
+}
+.wt-tracker .wt-ship dd {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--wt-text);
+  font-weight: 500;
+  min-height: 44px;
+  word-break: break-all;
+}
+
+/* ---------- Help block + floating WhatsApp ---------- */
+.wt-tracker .wt-help {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+.wt-tracker .wt-help p {
+  margin: 0.2rem 0 0;
+  color: var(--wt-muted);
+}
+.wt-tracker .wt-float-wa {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 45;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  cursor: pointer;
+  color: #fff;
+  background: var(--wt-whatsapp);
+  box-shadow: 0 8px 22px -6px rgba(20, 60, 30, 0.55);
+  transition: transform 0.2s ease;
+}
+.wt-tracker .wt-float-wa:hover {
+  transform: scale(1.06);
+}
+.wt-tracker .wt-float-wa svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* ---------- Fade-up on scroll (JS adds wt-ready, then wt-in per element) ---------- */
+.wt-tracker.wt-ready .wt-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.wt-tracker.wt-ready .wt-reveal.wt-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Lightbox ---------- */
+.wt-tracker .wt-lightbox {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgba(20, 12, 6, 0.92);
+  color: #fff;
+}
+.wt-tracker .wt-lightbox::backdrop {
+  background: rgba(20, 12, 6, 0.92);
+}
+.wt-tracker .wt-lightbox :focus-visible {
+  outline-color: #fff;
+}
+.wt-tracker .wt-lb-frame {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+.wt-tracker .wt-lb-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.75rem 1rem;
+}
+.wt-tracker .wt-lb-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: 0 4rem;
+  touch-action: pan-y;
+}
+.wt-tracker .wt-lb-stage img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+.wt-tracker .wt-lb-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(20, 12, 6, 0.55);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+.wt-tracker .wt-lb-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+.wt-tracker .wt-lb-prev,
+.wt-tracker .wt-lb-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.wt-tracker .wt-lb-prev {
+  left: 0.75rem;
+}
+.wt-tracker .wt-lb-next {
+  right: 0.75rem;
+}
+.wt-tracker .wt-lb-caption {
+  text-align: center;
+  padding: 0.9rem 1rem 1.2rem;
+  font-size: 0.9rem;
+}
+
+/* ---------- Larger screens ---------- */
+@media (min-width: 640px) {
+  .wt-tracker {
+    padding: 3.5rem 1.5rem 6rem;
+  }
+  .wt-tracker .wt-title {
+    font-size: 2.8rem;
+  }
+  .wt-tracker .wt-hero-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .wt-tracker .wt-status-line {
+    text-align: right;
+  }
+  .wt-tracker .wt-thumb {
+    flex-basis: 140px;
+  }
+  .wt-tracker .wt-help {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .wt-tracker *,
+  .wt-tracker *::before,
+  .wt-tracker *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .wt-tracker.wt-ready .wt-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

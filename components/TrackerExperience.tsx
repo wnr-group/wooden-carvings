@@ -10,7 +10,7 @@ import { ProductDetails } from "@/components/ProductDetails";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SupportDialog } from "@/components/SupportDialog";
-import { Timeline } from "@/components/Timeline";
+import { Tracker } from "@/components/tracker/Tracker";
 import { defaultOrderId, orders } from "@/data/orders";
 import type { Order } from "@/types/order";
 
@@ -30,7 +30,7 @@ export function TrackerExperience() {
       <SiteHeader onHelp={() => setSupportOpen(true)} />
       <main>
         <Hero order={order} />
-        <Timeline order={order} />
+        <Tracker order={order} onHelp={() => setSupportOpen(true)} />
         <ProductDetails order={order} />
         <DeliveryInfo order={order} />
         <Gallery />
