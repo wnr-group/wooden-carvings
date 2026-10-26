@@ -149,15 +149,24 @@ export function Tracker({ order, onHelp }: { order: Order; onHelp: () => void })
     document.getElementById(`wt-tab-${next}`)?.focus();
   }
 
-  // Keep the selected mark in view on narrow screens (scrolls the ruler only, never the page).
+  // The stage row starts at Stage 1. After that, picking a stage scrolls it into view
+  // (the ruler only, never the page); switching orders returns it to the start.
   useEffect(() => {
     const ruler = rulerRef.current;
+    if (!ruler) return;
+    if (firstScroll.current) {
+      firstScroll.current = false;
+      return;
+    }
     const mark = document.getElementById(`wt-tab-${selIndex}`);
-    if (!ruler || !mark) return;
+    if (!mark) return;
     const target = mark.offsetLeft - (ruler.clientWidth - mark.offsetWidth) / 2;
-    ruler.scrollTo({ left: Math.max(target, 0), behavior: firstScroll.current ? "auto" : "smooth" });
-    firstScroll.current = false;
-  }, [selIndex, order.id]);
+    ruler.scrollTo({ left: Math.max(target, 0), behavior: "smooth" });
+  }, [selIndex]);
+
+  useEffect(() => {
+    rulerRef.current?.scrollTo({ left: 0 });
+  }, [order.id]);
 
   // Fade-up on scroll, scoped to this section. Skipped for reduced motion.
   useEffect(() => {
