@@ -1,14 +1,12 @@
 "use client";
 
-import { Check, ChevronLeft, ChevronRight, MoveHorizontal, Maximize2 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { TrackerLightbox, type LightboxState } from "@/components/tracker/TrackerLightbox";
 import {
   getTrackerView,
   LOGISTICS_INDEX,
   REVIEW_INDEX,
   WHATSAPP_NUMBER,
-  type TrackerPhoto,
   type TrackerStageView,
 } from "@/components/tracker/trackerData";
 import { formatDate } from "@/lib/format";
@@ -59,114 +57,11 @@ function CopyTracking({ value }: { value: string }) {
   );
 }
 
-/** Before / after reveal: drag the handle (or use arrow keys) to compare two photos. */
-function CompareSlider({
-  before,
-  after,
-  beforeLabel,
-  afterLabel,
-}: {
-  before: TrackerPhoto;
-  after: TrackerPhoto;
-  beforeLabel: string;
-  afterLabel: string;
-}) {
-  const [pos, setPos] = useState(50);
-  return (
-    <div className="wt-compare" style={{ "--wt-p": `${pos}%` } as CSSProperties}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="wt-compare-img" src={after.src} alt={after.alt} loading="lazy" decoding="async" />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="wt-compare-img wt-compare-before" src={before.src} alt={before.alt} loading="lazy" decoding="async" />
-      <span className="wt-compare-tag wt-compare-tag--l">{beforeLabel}</span>
-      <span className="wt-compare-tag wt-compare-tag--r">{afterLabel}</span>
-      <span className="wt-compare-handle" aria-hidden="true">
-        <MoveHorizontal />
-      </span>
-      <input
-        className="wt-compare-range"
-        type="range"
-        min={0}
-        max={100}
-        step={1}
-        value={pos}
-        onChange={(e) => setPos(Number(e.target.value))}
-        aria-label={`Compare ${beforeLabel} with ${afterLabel}`}
-      />
-    </div>
-  );
-}
-
 export function Tracker({ order, onHelp }: { order: Order; onHelp: () => void }) {
   const rootRef = useRef<HTMLElement>(null);
-  const rulerRef = useRef<HTMLDivElement>(null);
-  const firstScroll = useRef(true);
   const [lightbox, setLightbox] = useState<LightboxState | null>(null);
-  // Selected stage + photo, tagged with the order so they reset when the order changes.
-  const [pick, setPick] = useState<{ orderId: string; stage: number; photo: number } | null>(null);
-
   const view = useMemo(() => getTrackerView(order), [order]);
   const { stages, focus, percent, statusLine, reference, productName } = view;
-  const delivered = order.currentStage === "delivered";
-  const chipDate = (delivered && order.stageTimestamps.delivered) || order.expectedDelivery;
-
-  const active = pick && pick.orderId === order.id ? pick : null;
-  const selIndex = active ? active.stage : focus.index;
-  const photoIndex = active ? active.photo : 0;
-  const sel = stages[selIndex];
-  const shownIndex = Math.min(photoIndex, Math.max(sel.photos.length - 1, 0));
-  const shown = sel.photos[shownIndex];
-
-  // Before / after: first photo of the earliest stage vs the latest photo so far.
-  const withPhotos = stages.filter((s) => s.photos.length > 0);
-  const beforeStage = withPhotos[0];
-  const afterStage = withPhotos[withPhotos.length - 1];
-  const canCompare = withPhotos.length >= 2 && beforeStage !== afterStage;
-
-  // Cinematic hero photo: the latest picture so far, or the customer's reference.
-  const heroPhoto = afterStage ? afterStage.photos[afterStage.photos.length - 1] : reference[0];
-  const heroTag = afterStage ? `Latest · Stage ${afterStage.index + 1}` : "Your reference";
-
-  function scrollRail(dir: 1 | -1) {
-    const rail = rulerRef.current;
-    if (rail) rail.scrollBy({ left: dir * Math.max(rail.clientWidth * 0.8, 240), behavior: "smooth" });
-  }
-
-  function choose(stage: number, photo = 0) {
-    setPick({ orderId: order.id, stage, photo });
-  }
-
-  function onRulerKey(e: KeyboardEvent<HTMLDivElement>) {
-    const last = stages.length - 1;
-    let next = selIndex;
-    if (e.key === "ArrowRight") next = Math.min(selIndex + 1, last);
-    else if (e.key === "ArrowLeft") next = Math.max(selIndex - 1, 0);
-    else if (e.key === "Home") next = 0;
-    else if (e.key === "End") next = last;
-    else return;
-    e.preventDefault();
-    choose(next);
-    document.getElementById(`wt-tab-${next}`)?.focus();
-  }
-
-  // The stage row starts at Stage 1. After that, picking a stage scrolls it into view
-  // (the ruler only, never the page); switching orders returns it to the start.
-  useEffect(() => {
-    const ruler = rulerRef.current;
-    if (!ruler) return;
-    if (firstScroll.current) {
-      firstScroll.current = false;
-      return;
-    }
-    const mark = document.getElementById(`wt-tab-${selIndex}`);
-    if (!mark) return;
-    const target = mark.offsetLeft - (ruler.clientWidth - mark.offsetWidth) / 2;
-    ruler.scrollTo({ left: Math.max(target, 0), behavior: "smooth" });
-  }, [selIndex]);
-
-  useEffect(() => {
-    rulerRef.current?.scrollTo({ left: 0 });
-  }, [order.id]);
 
   // Fade-up on scroll, scoped to this section. Skipped for reduced motion.
   useEffect(() => {
@@ -252,7 +147,26 @@ export function Tracker({ order, onHelp }: { order: Order; onHelp: () => void })
     return null;
   }
 
-  const circ = 2 * Math.PI * 70;
+  function thumbs(s: TrackerStageView) {
+    if (s.state === "upcoming" || s.photos.length === 0) return null;
+    return (
+      <ul className="wt-tl-photos" aria-label={`Photos from stage ${s.index + 1}`}>
+        {s.photos.map((p, i) => (
+          <li key={p.src}>
+            <button
+              type="button"
+              className="wt-tl-photo"
+              onClick={() => openPhotos(s, i)}
+              aria-label={`View larger: photo ${i + 1} of ${s.photos.length}, ${s.title}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={p.src} alt="" loading="lazy" decoding="async" />
+            </button>
+          </li>
+        ))}
+      </ul>
+    );
+  }
 
   return (
     <section
@@ -262,298 +176,36 @@ export function Tracker({ order, onHelp }: { order: Order; onHelp: () => void })
       className="wt-tracker"
     >
       <div className="wt-inner" key={order.id}>
-        {/* ---------- Cinematic hero ---------- */}
-        <header className="wt-hero wt-reveal">
-          {heroPhoto && (
-            <div className="wt-hero-bg" aria-hidden="true">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={heroPhoto.src} alt="" />
-            </div>
-          )}
-          <div className="wt-hero-text">
-            <span className="wt-pill">Order update</span>
-            <h1 id="wt-title" className="wt-title">
-              {productName}
-            </h1>
-            <p className="wt-mast-meta">
-              <span>No. {order.reference}</span>
-              <span aria-hidden="true">◆</span>
-              <span>
-                {delivered ? "Delivered " : "Expected "}
-                <time dateTime={chipDate}>{formatDate(chipDate)}</time>
-              </span>
-            </p>
+        {/* ---------- Title + overall status ---------- */}
+        <h1 id="wt-title" className="wt-title">
+          {productName}
+        </h1>
 
-            <div className="wt-status">
-              <p className="wt-label">Overall production status</p>
-              <h2 className="wt-status-line">{statusLine}</h2>
-              <ol className="wt-bar" aria-hidden="true">
-                {stages.map((st) => (
-                  <li
-                    key={st.index}
-                    className={`wt-bar-seg wt-bar-seg--${st.state}`}
-                    style={{ animationDelay: `${0.3 + st.index * 0.08}s` }}
-                  />
-                ))}
-              </ol>
-              <p className="wt-progress-text">
-                <strong>{percent}%</strong> of production complete
-              </p>
-            </div>
+        <section className="wt-status wt-reveal" aria-label="Overall production status">
+          <div className="wt-status-top">
+            <p className="wt-label">Overall production status</p>
+            <h2 className="wt-status-line">{statusLine}</h2>
           </div>
-
-          {heroPhoto && (
-            <div className="wt-arch-wrap">
-              <button
-                type="button"
-                className="wt-arch"
-                onClick={() =>
-                  afterStage
-                    ? openPhotos(afterStage, afterStage.photos.length - 1)
-                    : setLightbox({ stage: "Reference images", photos: reference, index: 0 })
-                }
-                aria-label={`View larger: ${heroPhoto.alt}`}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={heroPhoto.src} alt={heroPhoto.alt} decoding="async" />
-                <span className="wt-arch-tag">{heroTag}</span>
-              </button>
-              <div
-                className="wt-seal"
-                role="progressbar"
-                aria-label="Production progress"
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-valuenow={percent}
-                style={{ "--wt-pct": percent, "--wt-circ": circ } as CSSProperties}
-              >
-                <svg viewBox="0 0 200 200" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="wt-seal-grad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#F6DC9C" />
-                      <stop offset="100%" stopColor="#B3823E" />
-                    </linearGradient>
-                    <path id="wt-seal-path" d="M100,100 m-84,0 a84,84 0 1,1 168,0 a84,84 0 1,1 -168,0" />
-                  </defs>
-                  <circle className="wt-seal-bg" cx="100" cy="100" r="98" />
-                  <g className="wt-seal-text">
-                    <text>
-                      <textPath href="#wt-seal-path" textLength="520" lengthAdjust="spacing">
-                        HAND CARVED ◆ HEART OF WOOD ◆ VK WOOD CARVINGS ◆
-                      </textPath>
-                    </text>
-                  </g>
-                  <circle className="wt-seal-track" cx="100" cy="100" r="70" />
-                  <circle className="wt-seal-fill" cx="100" cy="100" r="70" />
-                </svg>
-                <div className="wt-seal-num" aria-hidden="true">
-                  <strong>{percent}%</strong>
-                  <span>carved</span>
-                </div>
-              </div>
-            </div>
-          )}
-        </header>
-
-        {/* ---------- Journey: swipeable stage gallery + selected stage ---------- */}
-        <section className="wt-atelier wt-reveal" aria-labelledby="wt-atelier-title">
-          <div className="wt-rail-head">
-            <div>
-              <p className="wt-label">Stage by stage</p>
-              <h2 id="wt-atelier-title" className="wt-h2 wt-h2--light wt-h2--big">
-                Production <em>Journey</em>
-              </h2>
-            </div>
-            <div className="wt-rail-nav">
-              <button type="button" className="wt-nav-btn" onClick={() => scrollRail(-1)} aria-label="Scroll stages left">
-                <ChevronLeft />
-              </button>
-              <button type="button" className="wt-nav-btn" onClick={() => scrollRail(1)} aria-label="Scroll stages right">
-                <ChevronRight />
-              </button>
-            </div>
-          </div>
-
           <div
-            ref={rulerRef}
-            className="wt-rail"
-            role="tablist"
-            aria-label="Production stages"
-            onKeyDown={onRulerKey}
+            className="wt-meter"
+            role="progressbar"
+            aria-label="Production progress"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={percent}
           >
-            {stages.map((s) => (
-              <button
-                key={s.index}
-                id={`wt-tab-${s.index}`}
-                type="button"
-                role="tab"
-                aria-selected={s.index === selIndex}
-                aria-controls="wt-panel"
-                tabIndex={s.index === selIndex ? 0 : -1}
-                className={`wt-stagecard wt-stagecard--${s.state}${s.index === selIndex ? " wt-stagecard--sel" : ""}`}
-                onClick={() => choose(s.index)}
-              >
-                <span className="wt-node" aria-hidden="true">
-                  <span className="wt-node-dot">{s.state === "completed" && <Check />}</span>
-                </span>
-                <span className={`wt-stagecard-media${s.photos[0] ? "" : " wt-stagecard-media--empty"}`}>
-                  {s.photos[0] ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={s.photos[0].src} alt="" loading="lazy" decoding="async" />
-                  ) : (
-                    <span className="wt-stagecard-empty" aria-hidden="true" />
-                  )}
-                  <span className="wt-stagecard-num" aria-hidden="true">
-                    {String(s.index + 1).padStart(2, "0")}
-                  </span>
-                </span>
-                <span className="wt-stagecard-name">{s.title}</span>
-                <span className="wt-stagecard-state">{stageBadge(s)}</span>
-              </button>
-            ))}
+            <span className="wt-meter-fill" style={{ width: `${percent}%` }} />
           </div>
-
-          <div
-            id="wt-panel"
-            role="tabpanel"
-            aria-labelledby={`wt-tab-${selIndex}`}
-            tabIndex={0}
-            className={`wt-panel wt-panel--${sel.state}`}
-          >
-            <figure className="wt-frame-wrap">
-              {shown ? (
-                <button
-                  type="button"
-                  className="wt-frame"
-                  onClick={() => openPhotos(sel, shownIndex)}
-                  aria-label={`View larger: ${shown.alt}`}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img key={shown.src} src={shown.src} alt={shown.alt} decoding="async" />
-                  <span className="wt-frame-ico" aria-hidden="true">
-                    <Maximize2 />
-                  </span>
-                </button>
-              ) : (
-                <div className="wt-frame wt-frame--empty">
-                  <p>
-                    {sel.state === "upcoming"
-                      ? "Photographs appear here once this stage begins."
-                      : "No photographs were taken at this stage."}
-                  </p>
-                </div>
-              )}
-              <figcaption className="wt-plaque">
-                <span>Stage {String(sel.index + 1).padStart(2, "0")}</span>
-                <span>{sel.title}</span>
-              </figcaption>
-            </figure>
-
-            <div className="wt-detail">
-              <p className="wt-label">
-                Stage {sel.index + 1} of {stages.length}
-              </p>
-              <h3 className="wt-detail-title">{sel.title}</h3>
-              <p className="wt-detail-row">
-                <span
-                  className={`wt-badge ${
-                    sel.state === "completed" ? "wt-badge--done" : sel.state === "current" ? "wt-badge--current" : ""
-                  }`}
-                >
-                  {stageBadge(sel)}
-                </span>
-                {sel.timestamp && (
-                  <span className="wt-meta">
-                    {sel.index === focus.index ? "Last updated on " : "Updated "}
-                    <time dateTime={sel.timestamp}>{formatDate(sel.timestamp)}</time>
-                  </span>
-                )}
-              </p>
-              {sel.index !== focus.index && (
-                <button type="button" className="wt-jump" onClick={() => choose(focus.index)}>
-                  Jump to latest update: Stage {focus.index + 1}
-                </button>
-              )}
-              {stageExtras(sel)}
-              {sel.photos.length > 1 && (
-                <div className="wt-strip" role="group" aria-label="Photos in this stage">
-                  {sel.photos.map((p, i) => (
-                    <button
-                      key={p.src}
-                      type="button"
-                      className={`wt-strip-btn${i === shownIndex ? " wt-strip-btn--on" : ""}`}
-                      onClick={() => choose(sel.index, i)}
-                      aria-label={`Show photo ${i + 1} of ${sel.photos.length}`}
-                      aria-pressed={i === shownIndex}
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={p.src} alt="" loading="lazy" decoding="async" />
-                    </button>
-                  ))}
-                </div>
-              )}
-              <ol className="wt-log" aria-label="Stage log">
-                {stages.map((st) => (
-                  <li key={st.index}>
-                    <button
-                      type="button"
-                      className={`wt-log-row wt-log-row--${st.state}${st.index === selIndex ? " wt-log-row--sel" : ""}`}
-                      onClick={() => choose(st.index)}
-                      aria-current={st.index === selIndex ? "true" : undefined}
-                    >
-                      <span className="wt-log-dot" aria-hidden="true" />
-                      <span className="wt-log-name">
-                        {String(st.index + 1).padStart(2, "0")} · {st.title}
-                      </span>
-                      <span className="wt-log-date">
-                        {st.timestamp ? formatDate(st.timestamp) : stageBadge(st)}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
+          <p className="wt-progress-text">{percent}% of production complete</p>
         </section>
-
-        {/* ---------- Timber to masterpiece ---------- */}
-        {canCompare && (
-          <section className="wt-transform wt-reveal" aria-labelledby="wt-transform-title">
-            <div className="wt-transform-text">
-              <p className="wt-label">The transformation</p>
-              <h2 id="wt-transform-title" className="wt-h2 wt-h2--big">
-                From raw timber to <em>your piece</em>
-              </h2>
-              <p className="wt-lede">
-                Drag the handle, or use the arrow keys, to see how far your sculpture has travelled since the first
-                block of wood.
-              </p>
-              <p className="wt-meta">
-                Left: Stage {beforeStage.index + 1}, {beforeStage.title}. Right: Stage {afterStage.index + 1},{" "}
-                {afterStage.title}.
-              </p>
-            </div>
-            <CompareSlider
-              before={beforeStage.photos[0]}
-              after={afterStage.photos[afterStage.photos.length - 1]}
-              beforeLabel={beforeStage.title}
-              afterLabel={afterStage.title}
-            />
-          </section>
-        )}
 
         {/* ---------- Reference images ---------- */}
         {reference.length > 0 && (
           <section className="wt-refs wt-reveal" aria-labelledby="wt-ref-title">
-            <div className="wt-refs-text">
-              <p className="wt-label">Pinned to the workbench</p>
-              <h2 id="wt-ref-title" className="wt-h2">
-                Your Reference Images
-              </h2>
-              <p className="wt-lede">
-                The photos you shared with us — our artisans are carving your piece from these.
-              </p>
-            </div>
+            <h2 id="wt-ref-title" className="wt-h2">
+              Your Reference Images
+            </h2>
+            <p className="wt-lede">The photos you shared with us — our artisans are carving your piece from these.</p>
             <ul className="wt-pins">
               {reference.map((p, i) => (
                 <li key={p.src} className="wt-pin">
@@ -564,13 +216,60 @@ export function Tracker({ order, onHelp }: { order: Order; onHelp: () => void })
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={p.src} alt={p.alt} loading="lazy" decoding="async" />
-                    <span>Reference {i + 1}</span>
                   </button>
                 </li>
               ))}
             </ul>
           </section>
         )}
+
+        {/* ---------- Journey: vertical timeline ---------- */}
+        <section className="wt-tl wt-reveal" aria-labelledby="wt-tl-title">
+          <h2 id="wt-tl-title" className="wt-tl-title">
+            Production Journey
+          </h2>
+
+          <div className="wt-tl-now">
+            <p className="wt-tl-now-label">Current update</p>
+            <div className="wt-tl-now-head">
+              <h3 className="wt-tl-now-title">
+                Stage {focus.index + 1} — {focus.title}
+              </h3>
+              <span className={`wt-tl-pill wt-tl-pill--${focus.state}`}>{stageBadge(focus)}</span>
+            </div>
+            {focus.timestamp && (
+              <p className="wt-tl-date">
+                Updated <time dateTime={focus.timestamp}>{formatDate(focus.timestamp)}</time>
+              </p>
+            )}
+            {thumbs(focus)}
+          </div>
+
+          <ol className="wt-tl-list">
+            {stages.map((s) => (
+              <li key={s.index} className={`wt-tl-item wt-tl-item--${s.state}`}>
+                <span className={`wt-tl-dot wt-tl-dot--${s.state}`} aria-hidden="true">
+                  {s.state === "completed" ? "✓" : s.state === "current" ? s.index + 1 : "○"}
+                </span>
+                <div className="wt-tl-card">
+                  <div className="wt-tl-head">
+                    <h3 className="wt-tl-name">
+                      Stage {s.index + 1} — {s.title}
+                    </h3>
+                    <span className={`wt-tl-pill wt-tl-pill--${s.state}`}>{stageBadge(s)}</span>
+                  </div>
+                  {s.timestamp && s.state !== "upcoming" && (
+                    <p className="wt-tl-date">
+                      Updated <time dateTime={s.timestamp}>{formatDate(s.timestamp)}</time>
+                    </p>
+                  )}
+                  {thumbs(s)}
+                  {stageExtras(s)}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
 
         {/* ---------- Help ---------- */}
         <section className="wt-help wt-reveal" aria-labelledby="wt-help-title">
