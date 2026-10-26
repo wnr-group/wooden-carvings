@@ -9,7 +9,7 @@ const credits: { label: string; credit: PhotoCredit }[] = [
 
 export function SiteFooter({ onHelp }: { onHelp: () => void }) {
   return (
-    <footer className="on-dark bg-charcoal text-ivory">
+    <footer className="on-dark bg-[#2c1b10] text-ivory">
       <div className="mx-auto max-w-[1320px] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-6">
