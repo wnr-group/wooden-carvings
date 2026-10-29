@@ -65,7 +65,7 @@ export function SiteFooter({ onHelp, notice }: SiteFooterProps) {
             ))}
           </ul>
         </details>
-        <p className="mt-4">&copy; 2026 VK Wood Carvings (prototype)</p>
+        <p className="mt-4">&copy; 2026 VK Wood Carvings</p>
       </div>
     </footer>
   );
