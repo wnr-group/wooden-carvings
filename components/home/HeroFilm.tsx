@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { AmbientVideo } from "@/components/AmbientVideo";
+import { AmbientPlaylist } from "@/components/AmbientPlaylist";
 import { Reveal } from "@/components/Reveal";
+
+const HERO_VIDEOS = ["/videos/showcase.mp4", "/videos/carver.mp4", "/videos/hands.mp4"];
 
 /**
  * The carved door-frame is three transparent cut-outs of the supplied frame art
@@ -15,10 +17,10 @@ export function HeroFilm() {
       <div className="relative isolate h-[min(calc(100vw/1.75),88svh)] min-h-[15rem] w-full overflow-hidden bg-[#2c1b10] [container-type:size]">
         {/* Video runs edge to edge behind the pillars so no background shows at the sides */}
         <div className="absolute inset-x-0 bottom-0 top-[11.4cqh] -z-20 overflow-hidden">
-          <AmbientVideo
-            src="/videos/showcase.mp4"
-            label="A finished hand-carved wooden sculpture in warm light"
-            className="h-full w-full object-cover"
+          <AmbientPlaylist
+            sources={HERO_VIDEOS}
+            label="Hand-carved wooden sculptures and the artisans who make them"
+            className="h-full w-full"
           />
         </div>
         <div
