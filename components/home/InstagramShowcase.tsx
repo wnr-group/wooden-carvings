@@ -18,10 +18,10 @@ type Tile =
 
 /** DOM order matters: it drives the auto-placement of the bento grid on every screen size. */
 const TILES: Tile[] = [
-  { kind: "reel", src: "/videos/carver.mp4", label: "A carver shaping wood into a sculpture", caption: "Behind the carving", className: "row-span-2" },
+  { kind: "reel", src: "/videos/reel-rebirth.mp4", label: "Wood shavings rising and forming a carved wooden Krishna statue", caption: "From shavings to sacred", className: "row-span-2" },
   { kind: "photo", src: "/images/products/heirloom-mandir.webp", alt: "A hand-carved wooden mandir glowing with lamplight", className: "" },
   { kind: "photo", src: "/images/products/celestial-apsara.webp", alt: "A hand-carved wooden Apsara dancer under a spotlight", className: "" },
-  { kind: "reel", src: "/videos/hands.mp4", label: "A hand moving across carved wooden panels", caption: "Feel the grain", className: "row-span-2" },
+  { kind: "reel", src: "/videos/reel-3d-turntable.mp4", label: "A carved wooden statue slowly rotating on a turntable", caption: "Every angle, up close", className: "row-span-2" },
   { kind: "photo", src: "/images/products/temple-scene-wall-mount.webp", alt: "A carved wooden temple scene mounted in a living room", className: "row-span-2 lg:col-span-2 lg:row-span-1" },
 ];
 
