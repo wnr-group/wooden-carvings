@@ -25,7 +25,7 @@ export function TrackerExperience() {
       >
         Skip to order status
       </a>
-      <SiteHeader variant="solid" onHelp={() => setSupportOpen(true)} />
+      <SiteHeader variant="solid" />
       <main>
         <Tracker order={order} onHelp={() => setSupportOpen(true)} />
         <ProductDetails order={order} />
