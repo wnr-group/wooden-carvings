@@ -27,6 +27,17 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5.5rem;
@@ -128,5 +139,59 @@ dialog.sheet[open]::backdrop {
   }
   .soft-pulse {
     display: none;
+  }
+}
+
+/* Auto-scrolling review rows. Pause on hover/focus or when the pause button is on. */
+@keyframes review-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.review-track {
+  animation: review-scroll 80s linear infinite;
+}
+.review-row:hover .review-track,
+.review-row:focus-within .review-track,
+.review-row[data-paused="true"] .review-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .review-track {
+    animation: none;
+  }
+}
+
+/* Skeleton shimmer for loading states and images that have not arrived yet */
+@keyframes skeleton-shimmer {
+  from { background-position: 150% 0; }
+  to { background-position: -50% 0; }
+}
+.skeleton {
+  background-color: #ece1cc;
+  background-image: linear-gradient(100deg, transparent 30%, rgb(255 253 249 / 0.65) 50%, transparent 70%);
+  background-size: 250% 100%;
+  background-repeat: no-repeat;
+  animation: skeleton-shimmer 1.7s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+
+/* FAQ answers glide open and closed instead of snapping (where ::details-content is supported) */
+@supports selector(details::details-content) {
+  details {
+    interpolate-size: allow-keywords;
+  }
+  details::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      content-visibility 0.45s allow-discrete;
+  }
+  details[open]::details-content {
+    block-size: auto;
   }
 }
