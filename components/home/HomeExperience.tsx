@@ -1,22 +1,22 @@
 "use client";
 
 import { ArrowRight, ChevronDown, Hammer, Leaf, ShieldCheck, Star, Truck } from "lucide-react";
-import { AnimatePresence, MotionConfig, motion } from "motion/react";
-import Image from "next/image";
+import { MotionConfig, motion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
 import { HeroFilm } from "@/components/home/HeroFilm";
 import { BackToTop, Float, GoldRule, ParallaxImage, ScrollMarquee } from "@/components/home/motion";
 import { SmoothScroll } from "@/components/home/SmoothScroll";
+import { CollectionShowcase } from "@/components/home/CollectionShowcase";
+import { StatuePlaceholder } from "@/components/home/StatuePlaceholder";
 import { PremiumCollection } from "@/components/home/PremiumCollection";
 import { Reveal } from "@/components/Reveal";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Wordmark } from "@/components/Wordmark";
 import { galleryItems } from "@/data/gallery";
-import { CATEGORY_ARCHES, PRODUCT_TABS, products } from "@/data/products";
+import { CATEGORY_ARCHES, PRODUCT_TABS } from "@/data/products";
 import { cn } from "@/lib/cn";
 
-const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
 const WHY = [
   { icon: Hammer, title: "Hand carved", text: "Every detail shaped by a master artisan." },
@@ -44,22 +44,6 @@ const INSTA = [
   { src: "/images/deities/krishna.webp", cls: "row-span-2" },
   { src: "/images/deities/buddha.webp", cls: "row-span-2" },
 ];
-
-/** Shown where a real photograph of that deity has not been supplied yet. */
-function StatuePlaceholder({ label }: { label: string }) {
-  return (
-    <span
-      role="img"
-      aria-label={`${label} statue, photo coming soon`}
-      className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-[linear-gradient(160deg,#efe4d1,#d6bf9d)] text-walnut/70"
-    >
-      <span aria-hidden="true" className="font-display text-5xl leading-none">
-        {label.charAt(0)}
-      </span>
-      <span className="text-[0.6rem] uppercase tracking-[0.2em]">Photo soon</span>
-    </span>
-  );
-}
 
 function SectionTitle({ children, id, light }: { children: React.ReactNode; id: string; light?: boolean }) {
   return (
@@ -95,31 +79,8 @@ function Stars() {
   );
 }
 
-function ProductCard({ p, compact }: { p: (typeof products)[number]; compact?: boolean }) {
-  return (
-    <article className="group rounded-[6px] border border-stone bg-paper p-3 transition-shadow hover:shadow-[0_18px_40px_-18px_rgb(73_53_38/0.5)]">
-      <div className={cn("relative overflow-hidden rounded-[4px] bg-stone", compact ? "aspect-[3/4]" : "aspect-[4/5]")}>
-        {p.src ? (
-          <Image
-            src={p.src}
-            alt={p.alt}
-            fill
-            sizes="(min-width:1024px) 260px, 50vw"
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-        ) : (
-          <StatuePlaceholder label={p.category} />
-        )}
-      </div>
-      <h3 className="mt-3 font-display text-lg leading-tight text-charcoal">{p.name}</h3>
-      <p className="mt-1 text-sm font-medium text-walnut">{inr(p.price)}</p>
-    </article>
-  );
-}
-
 export function HomeExperience() {
   const [tab, setTab] = useState<(typeof PRODUCT_TABS)[number]>("All");
-  const visible = tab === "All" ? products : products.filter((p) => p.category === tab);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -193,52 +154,7 @@ export function HomeExperience() {
 
         <PremiumCollection onSelect={setTab} />
 
-        {/* Tabbed collection */}
-        <section id="collection" aria-labelledby="collection-title" className="bg-ivory">
-          <div className="mx-auto max-w-[1320px] px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
-            <Reveal>
-              <SectionTitle id="collection-title">Our Collections</SectionTitle>
-            </Reveal>
-            <div className="mt-10 rounded-[8px] bg-paper p-4 shadow-[0_30px_60px_-30px_rgb(73_53_38/0.35)] sm:p-6">
-              <div role="tablist" aria-label="Collections" className="mb-6 flex gap-2 overflow-x-auto rounded-[6px] bg-walnut p-2 [scrollbar-width:none]">
-                {PRODUCT_TABS.map((t) => (
-                  <button
-                    key={t}
-                    role="tab"
-                    type="button"
-                    aria-selected={tab === t}
-                    onClick={() => setTab(t)}
-                    className={cn(
-                      "h-10 shrink-0 rounded-[4px] px-5 text-sm transition-colors",
-                      tab === t ? "bg-oak font-medium text-charcoal" : "text-ivory/80 hover:text-ivory",
-                    )}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
-              <motion.ul layout className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                <AnimatePresence mode="popLayout" initial={false}>
-                  {visible.map((p) => (
-                    <motion.li
-                      key={p.id}
-                      layout
-                      initial={{ opacity: 0, scale: 0.92, y: 16 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.92 }}
-                      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                      <ProductCard p={p} compact />
-                    </motion.li>
-                  ))}
-                </AnimatePresence>
-              </motion.ul>
-              <p className="mt-6 text-center text-xs text-muted-strong">
-                Sample catalogue. Photographs of each deity statue will be added.
-              </p>
-            </div>
-          </div>
-        </section>
+        <CollectionShowcase tab={tab} onTab={setTab} />
 
         {/* Why choose us */}
         <section
