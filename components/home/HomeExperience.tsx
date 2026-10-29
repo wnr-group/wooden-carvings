@@ -36,13 +36,27 @@ const FAQS = [
 ];
 
 const INSTA = [
-  { src: "/images/detail.jpg", cls: "row-span-2" },
-  { src: "/images/product.jpg", cls: "col-span-2 row-span-2" },
-  { src: "/images/polished.jpg", cls: "" },
-  { src: "/images/carving.jpg", cls: "" },
-  { src: "/images/makonde.jpg", cls: "row-span-2" },
-  { src: "/images/bird.jpg", cls: "col-span-2" },
+  { src: "/images/deities/lakshmi.webp", cls: "row-span-2" },
+  { src: "/images/deities/hanuman.webp", cls: "row-span-2" },
+  { src: "/images/deities/krishna.webp", cls: "row-span-2" },
+  { src: "/images/deities/buddha.webp", cls: "row-span-2" },
 ];
+
+/** Shown where a real photograph of that deity has not been supplied yet. */
+function StatuePlaceholder({ label }: { label: string }) {
+  return (
+    <span
+      role="img"
+      aria-label={`${label} statue, photo coming soon`}
+      className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-[linear-gradient(160deg,#efe4d1,#d6bf9d)] text-walnut/70"
+    >
+      <span aria-hidden="true" className="font-display text-5xl leading-none">
+        {label.charAt(0)}
+      </span>
+      <span className="text-[0.6rem] uppercase tracking-[0.2em]">Photo soon</span>
+    </span>
+  );
+}
 
 function SectionTitle({ children, id, light }: { children: React.ReactNode; id: string; light?: boolean }) {
   return (
@@ -73,13 +87,17 @@ function ProductCard({ p, compact }: { p: (typeof products)[number]; compact?: b
   return (
     <article className="group rounded-[6px] border border-stone bg-paper p-3 transition-shadow hover:shadow-[0_18px_40px_-18px_rgb(73_53_38/0.5)]">
       <div className={cn("relative overflow-hidden rounded-[4px] bg-stone", compact ? "aspect-[3/4]" : "aspect-[4/5]")}>
-        <Image
-          src={p.src}
-          alt={p.alt}
-          fill
-          sizes="(min-width:1024px) 260px, 50vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-        />
+        {p.src ? (
+          <Image
+            src={p.src}
+            alt={p.alt}
+            fill
+            sizes="(min-width:1024px) 260px, 50vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+        ) : (
+          <StatuePlaceholder label={p.category} />
+        )}
       </div>
       <h3 className="mt-3 font-display text-lg leading-tight text-charcoal">{p.name}</h3>
       <p className="mt-1 text-sm font-medium text-walnut">{inr(p.price)}</p>
@@ -133,13 +151,17 @@ export function HomeExperience() {
         <HeroFilm />
 
         {/* Arch categories */}
-        <section aria-label="Shop by category" className="bg-ivory">
+        <section aria-label="Shop by deity" className="bg-ivory">
           <ul className="mx-auto flex max-w-[1320px] gap-6 overflow-x-auto px-5 py-12 sm:justify-center sm:px-8 lg:gap-10 lg:px-12 [scrollbar-width:none]">
             {CATEGORY_ARCHES.map((c, i) => (
               <Reveal as="li" key={c.label} delay={i * 0.05} className="shrink-0 text-center">
                 <Link href="/#collection" className="group block">
                   <span className="relative mx-auto block h-32 w-24 overflow-hidden rounded-t-full border-2 border-oak/60 bg-stone transition-colors group-hover:border-walnut sm:h-40 sm:w-28">
-                    <Image src={c.src} alt="" fill sizes="112px" className="object-cover transition-transform duration-500 group-hover:scale-110" />
+                    {c.src ? (
+                      <Image src={c.src} alt="" fill sizes="112px" className="object-cover transition-transform duration-500 group-hover:scale-110" />
+                    ) : (
+                      <StatuePlaceholder label={c.label} />
+                    )}
                   </span>
                   <span className="mt-3 block text-xs font-medium uppercase tracking-[0.18em] text-walnut">{c.label}</span>
                 </Link>
@@ -192,7 +214,7 @@ export function HomeExperience() {
                 ))}
               </ul>
               <p className="mt-6 text-center text-xs text-muted-strong">
-                Sample catalogue. Illustrative photography, not photographs of customer orders.
+                Sample catalogue. Photographs of each deity statue will be added.
               </p>
             </div>
           </div>
@@ -252,7 +274,7 @@ export function HomeExperience() {
             <Reveal>
               <SectionTitle id="insta-title">Visit Our Instagram Profile</SectionTitle>
             </Reveal>
-            <ul className="mt-12 grid auto-rows-[9rem] grid-cols-3 gap-3 sm:auto-rows-[12rem] lg:auto-rows-[15rem] lg:grid-cols-4">
+            <ul className="mt-12 grid auto-rows-[9rem] grid-cols-4 gap-3 sm:auto-rows-[12rem] lg:auto-rows-[15rem]">
               {INSTA.map((t, i) => (
                 <li key={i} className={cn("group relative overflow-hidden rounded-[4px] bg-stone", t.cls)}>
                   <Image src={t.src} alt="" fill sizes="(min-width:1024px) 33vw, 50vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
