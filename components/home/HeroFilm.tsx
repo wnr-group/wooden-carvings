@@ -12,12 +12,15 @@ import { Reveal } from "@/components/Reveal";
 export function HeroFilm() {
   return (
     <section id="top" aria-labelledby="film-title" className="bg-paper">
-      <div className="relative isolate h-[clamp(17rem,42vw,38rem)] w-full overflow-hidden bg-[#f1e9de]">
-        <AmbientVideo
-          src="/videos/showcase.mp4"
-          label="A finished hand-carved wooden sculpture in warm light"
-          className="absolute inset-0 -z-20 h-full w-full object-cover"
-        />
+      <div className="relative isolate h-[min(calc(100vw/1.75),88svh)] min-h-[15rem] w-full overflow-hidden bg-[#2c1b10] [container-type:size]">
+        {/* Video runs edge to edge behind the pillars so no background shows at the sides */}
+        <div className="absolute inset-x-0 bottom-0 top-[11.4cqh] -z-20 overflow-hidden">
+          <AmbientVideo
+            src="/videos/showcase.mp4"
+            label="A finished hand-carved wooden sculpture in warm light"
+            className="h-full w-full object-cover"
+          />
+        </div>
         <div
           aria-hidden="true"
           className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_45%_50%_at_50%_55%,rgba(23,15,8,0.5),transparent_75%)]"
