@@ -1,11 +1,12 @@
 "use client";
 
-import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight, Hammer, Leaf, ShieldCheck, Star, Truck } from "lucide-react";
+import { ArrowRight, ChevronDown, Hammer, Leaf, ShieldCheck, Star, Truck } from "lucide-react";
 import { MotionConfig } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { HeroFilm } from "@/components/home/HeroFilm";
+import { PremiumCollection } from "@/components/home/PremiumCollection";
 import { Reveal } from "@/components/Reveal";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Wordmark } from "@/components/Wordmark";
@@ -105,41 +106,6 @@ function ProductCard({ p, compact }: { p: (typeof products)[number]; compact?: b
   );
 }
 
-function PremiumCarousel() {
-  const track = useRef<HTMLUListElement>(null);
-  const scroll = (dir: 1 | -1) =>
-    track.current?.scrollBy({ left: dir * (track.current.clientWidth * 0.8), behavior: "smooth" });
-  const items = products.slice(0, 6);
-
-  return (
-    <div className="relative">
-      <button
-        type="button"
-        aria-label="Previous pieces"
-        onClick={() => scroll(-1)}
-        className="absolute -left-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-paper text-walnut shadow-lg transition-colors hover:bg-walnut hover:text-ivory sm:flex lg:-left-5"
-      >
-        <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-      </button>
-      <ul ref={track} className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {items.map((p) => (
-          <li key={p.id} className="w-[62%] shrink-0 snap-start sm:w-[34%] lg:w-[22.5%]">
-            <ProductCard p={p} />
-          </li>
-        ))}
-      </ul>
-      <button
-        type="button"
-        aria-label="Next pieces"
-        onClick={() => scroll(1)}
-        className="absolute -right-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-paper text-walnut shadow-lg transition-colors hover:bg-walnut hover:text-ivory sm:flex lg:-right-5"
-      >
-        <ChevronRight className="h-5 w-5" aria-hidden="true" />
-      </button>
-    </div>
-  );
-}
-
 export function HomeExperience() {
   const [tab, setTab] = useState<(typeof PRODUCT_TABS)[number]>("All");
   const visible = tab === "All" ? products : products.filter((p) => p.category === tab);
@@ -211,17 +177,7 @@ export function HomeExperience() {
           </div>
         </section>
 
-        {/* Premium collection */}
-        <section aria-labelledby="premium-title" className="bg-stone/60">
-          <div className="mx-auto max-w-[1320px] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
-            <Reveal>
-              <SectionTitle id="premium-title">Premium Collection</SectionTitle>
-            </Reveal>
-            <div className="mt-12">
-              <PremiumCarousel />
-            </div>
-          </div>
-        </section>
+        <PremiumCollection onSelect={setTab} />
 
         {/* Tabbed collection */}
         <section id="collection" aria-labelledby="collection-title" className="bg-ivory">
