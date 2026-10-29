@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-reac
 import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import { FadeImage } from "@/components/FadeImage";
+import { StatuePlaceholder } from "@/components/home/StatuePlaceholder";
 import { Reveal } from "@/components/Reveal";
 import { products, type Category } from "@/data/products";
 import { cn } from "@/lib/cn";
@@ -11,8 +12,8 @@ import { cn } from "@/lib/cn";
 const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 const pad = (n: number) => String(n).padStart(2, "0");
 
-/** Pieces that have a real photograph. */
-const FEATURED = products.filter((p) => p.src);
+/** Pieces marked `featured` in data/products.ts, in rank order: doors, mandirs, apsaras and wall art. */
+const FEATURED = products.filter((p) => p.featured).sort((a, b) => a.featured! - b.featured!);
 
 export function PremiumCollection({ onSelect }: { onSelect: (category: Category) => void }) {
   const track = useRef<HTMLUListElement>(null);
@@ -56,8 +57,8 @@ export function PremiumCollection({ onSelect }: { onSelect: (category: Category)
             <em className="text-[#9a6a2a]">Collection</em>
           </h2>
           <p className="mt-6 max-w-sm text-base leading-relaxed text-muted-strong">
-            Our finest heirloom statues, each carved over weeks by a master artisan, finished by hand, and made
-            to be passed down.
+            Our most extraordinary carved works: temple doors, mandirs, apsaras and sculpted wall art, each shaped
+            over weeks by a master artisan and made to be passed down.
           </p>
 
           <div className="mt-10 hidden items-center gap-6 lg:flex">
@@ -112,13 +113,17 @@ export function PremiumCollection({ onSelect }: { onSelect: (category: Category)
                   {/* Gallery print: white mat, straight edges, gold corner marks */}
                   <div className="relative bg-paper p-3 shadow-[0_30px_50px_-30px_rgb(73_53_38/0.55)] ring-1 ring-walnut/10 transition-shadow duration-500 group-hover:shadow-[0_40px_60px_-28px_rgb(73_53_38/0.7)] sm:p-4">
                     <div className="skeleton relative aspect-[4/5] overflow-hidden">
-                      <FadeImage
-                        src={p.src!}
-                        alt={p.alt}
-                        fill
-                        sizes="(min-width:1024px) 340px, (min-width:640px) 46vw, 78vw"
-                        className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]"
-                      />
+                      {p.src ? (
+                        <FadeImage
+                          src={p.src}
+                          alt={p.alt}
+                          fill
+                          sizes="(min-width:1024px) 340px, (min-width:640px) 46vw, 78vw"
+                          className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]"
+                        />
+                      ) : (
+                        <StatuePlaceholder label={p.category} ornate />
+                      )}
                       <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#2c1b10]/30 via-transparent to-transparent" />
                       {(["left-3 top-3 border-l border-t", "right-3 top-3 border-r border-t", "bottom-3 left-3 border-b border-l", "bottom-3 right-3 border-b border-r"] as const).map((c) => (
                         <span key={c} aria-hidden="true" className={cn("absolute h-6 w-6 border-oak", c)} />

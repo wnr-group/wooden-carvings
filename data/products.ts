@@ -8,7 +8,7 @@
  * products that use it. The filters on the homepage pick it up automatically.
  */
 export const DEITIES = ["Ganesha", "Lakshmi", "Krishna", "Buddha", "Hanuman", "Saraswati"] as const;
-export const ARTS = ["Apsaras", "Wall Mounts", "Wall Brackets"] as const;
+export const ARTS = ["Apsaras", "Wall Mounts", "Wall Brackets", "Doors & Frames", "Mandirs"] as const;
 
 export type Deity = (typeof DEITIES)[number];
 export type Art = (typeof ARTS)[number];
@@ -21,6 +21,8 @@ export interface Product {
   price: number;
   src?: string;
   alt: string;
+  /** Set a number (1, 2, 3...) to feature this piece in the Premium Collection, in that order. */
+  featured?: number;
 }
 
 export const isDeity = (c: Category): c is Deity => (DEITIES as readonly string[]).includes(c);
@@ -36,12 +38,15 @@ export const products: Product[] = [
   { id: "p6", name: "Goddess Saraswati", category: "Saraswati", price: 22500, src: "/images/deities/saraswati.webp", alt: "Hand-carved wooden statue of Goddess Saraswati playing the veena, with a swan" },
   { id: "p7", name: "Ganesha, Seated", category: "Ganesha", price: 14200, alt: "Hand-carved wooden seated Ganesha (photo to be added)" },
   { id: "p8", name: "Radha Krishna", category: "Krishna", price: 27500, alt: "Hand-carved wooden Radha Krishna statue (photo to be added)" },
-  { id: "p9", name: "Celestial Apsara", category: "Apsaras", price: 26000, alt: "Hand-carved wooden Apsara dancer (photo to be added)" },
+  { id: "p9", name: "Celestial Apsara", category: "Apsaras", price: 26000, featured: 2, alt: "Hand-carved wooden Apsara dancer (photo to be added)" },
   { id: "p10", name: "Apsara with Lotus", category: "Apsaras", price: 23500, alt: "Hand-carved wooden Apsara holding a lotus (photo to be added)" },
   { id: "p11", name: "Floral Wall Panel", category: "Wall Mounts", price: 15500, alt: "Hand-carved wooden floral wall panel (photo to be added)" },
-  { id: "p12", name: "Temple Scene Wall Mount", category: "Wall Mounts", price: 32000, alt: "Hand-carved wooden temple scene wall mount (photo to be added)" },
+  { id: "p12", name: "Temple Scene Wall Mount", category: "Wall Mounts", price: 32000, featured: 4, alt: "Hand-carved wooden temple scene wall mount (photo to be added)" },
   { id: "p13", name: "Carved Corner Bracket", category: "Wall Brackets", price: 6800, alt: "Hand-carved wooden corner bracket (photo to be added)" },
-  { id: "p14", name: "Scroll Wall Bracket, Pair", category: "Wall Brackets", price: 9400, alt: "A pair of hand-carved wooden scroll wall brackets (photo to be added)" },
+  { id: "p14", name: "Scroll Wall Bracket, Pair", category: "Wall Brackets", price: 9400, featured: 6, alt: "A pair of hand-carved wooden scroll wall brackets (photo to be added)" },
+  { id: "p15", name: "Carved Temple Door", category: "Doors & Frames", price: 85000, featured: 1, alt: "Hand-carved wooden temple door (photo to be added)" },
+  { id: "p16", name: "Arched Door Frame with Pillars", category: "Doors & Frames", price: 62000, featured: 5, alt: "Hand-carved wooden arched door frame with pillars (photo to be added)" },
+  { id: "p17", name: "Heirloom Mandir", category: "Mandirs", price: 72000, featured: 3, alt: "Hand-carved wooden home mandir (photo to be added)" },
 ];
 
 export const CATEGORY_ARCHES: { label: Deity; src?: string }[] = [
