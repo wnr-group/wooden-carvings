@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, ChevronDown, Hammer, Leaf, ShieldCheck, Star, Truck } from "lucide-react";
+import { ArrowRight, ChevronDown, Star } from "lucide-react";
 import { MotionConfig, motion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import { HeroFilm } from "@/components/home/HeroFilm";
 import { BackToTop, Float, GoldRule, ParallaxImage, ScrollMarquee } from "@/components/home/motion";
 import { SmoothScroll } from "@/components/home/SmoothScroll";
 import { CollectionShowcase } from "@/components/home/CollectionShowcase";
+import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { StatuePlaceholder } from "@/components/home/StatuePlaceholder";
 import { PremiumCollection } from "@/components/home/PremiumCollection";
 import { Reveal } from "@/components/Reveal";
@@ -18,12 +19,6 @@ import { CATEGORY_ARCHES, PRODUCT_TABS } from "@/data/products";
 import { cn } from "@/lib/cn";
 
 
-const WHY = [
-  { icon: Hammer, title: "Hand carved", text: "Every detail shaped by a master artisan." },
-  { icon: Leaf, title: "Solid wood", text: "Seasoned timber that ages beautifully." },
-  { icon: ShieldCheck, title: "Quality assured", text: "Inspected at every stage of making." },
-  { icon: Truck, title: "Safe delivery", text: "Protectively packed and tracked." },
-];
 
 const REVIEWS = [
   { name: "Sample reviewer", text: "The carving detail is extraordinary. It feels like a piece with a soul, and the finish is flawless." },
@@ -156,38 +151,7 @@ export function HomeExperience() {
 
         <CollectionShowcase tab={tab} onTab={setTab} />
 
-        {/* Why choose us */}
-        <section
-          id="craft"
-          aria-labelledby="why-title"
-          className="on-dark relative bg-[#2c1b10] text-ivory [background-image:radial-gradient(circle_at_1px_1px,rgb(199_167_122/0.14)_1px,transparent_0),linear-gradient(180deg,#38241a,#2c1b10)] [background-size:22px_22px,100%_100%]"
-        >
-          <div className="mx-auto max-w-[1320px] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
-            <Reveal>
-              <SectionTitle id="why-title" light>
-                Why Choose Us
-              </SectionTitle>
-            </Reveal>
-            <ul className="mt-12 grid grid-cols-2 gap-8 lg:grid-cols-4">
-              {WHY.map(({ icon: Icon, title, text }, i) => (
-                <Reveal as="li" key={title} delay={i * 0.07} className="text-center">
-                  <motion.span
-                    initial={{ scale: 0.4, rotate: -30, opacity: 0 }}
-                    whileInView={{ scale: 1, rotate: 0, opacity: 1 }}
-                    whileHover={{ scale: 1.1, rotate: 6 }}
-                    viewport={{ once: true }}
-                    transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.1 + i * 0.1 }}
-                    className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-oak/50 text-oak"
-                  >
-                    <Icon className="h-7 w-7" aria-hidden="true" />
-                  </motion.span>
-                  <h3 className="mt-4 font-display text-xl">{title}</h3>
-                  <p className="mx-auto mt-1 max-w-[16rem] text-sm leading-relaxed text-ivory/70">{text}</p>
-                </Reveal>
-              ))}
-            </ul>
-          </div>
-        </section>
+        <WhyChooseUs />
 
         <ScrollMarquee words={["Hand carved", "Solid wood", "Heirloom quality", "Made to last"]} />
 
