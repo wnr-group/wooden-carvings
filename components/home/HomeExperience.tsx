@@ -12,6 +12,7 @@ import { CollectionShowcase } from "@/components/home/CollectionShowcase";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { ReviewsMarquee } from "@/components/home/ReviewsMarquee";
 import { StatuePlaceholder } from "@/components/home/StatuePlaceholder";
+import { InstagramShowcase } from "@/components/home/InstagramShowcase";
 import { PremiumCollection } from "@/components/home/PremiumCollection";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -29,12 +30,6 @@ const FAQS = [
   { q: "What wood do you use?", a: "Solid, seasoned hardwood chosen for its grain and long life." },
 ];
 
-const INSTA = [
-  { src: "/images/deities/lakshmi.webp", cls: "row-span-2" },
-  { src: "/images/deities/hanuman.webp", cls: "row-span-2" },
-  { src: "/images/deities/krishna.webp", cls: "row-span-2" },
-  { src: "/images/deities/buddha.webp", cls: "row-span-2" },
-];
 
 function SectionTitle({ children, id, light }: { children: React.ReactNode; id: string; light?: boolean }) {
   return (
@@ -135,31 +130,7 @@ export function HomeExperience() {
 
         <ReviewsMarquee />
 
-        {/* Instagram */}
-        <section aria-labelledby="insta-title" className="bg-paper">
-          <div className="mx-auto max-w-[1320px] px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
-            <Reveal>
-              <SectionTitle id="insta-title">Visit Our Instagram Profile</SectionTitle>
-            </Reveal>
-            <ul className="mt-12 grid auto-rows-[9rem] grid-cols-4 gap-3 sm:auto-rows-[12rem] lg:auto-rows-[15rem]">
-              {INSTA.map((t, i) => (
-                <li key={i} className={cn("group relative overflow-hidden rounded-[4px] bg-stone", t.cls)}>
-                  <ParallaxImage src={t.src} alt="" sizes="(min-width:1024px) 25vw, 50vw" strength={7} className="transition-transform duration-700 group-hover:scale-105" />
-                </li>
-              ))}
-            </ul>
-            <div className="mt-10 text-center">
-              <a
-                href="https://www.instagram.com/"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex h-12 items-center gap-2 rounded-full bg-walnut px-8 text-sm font-medium text-ivory transition-colors hover:bg-charcoal"
-              >
-                Follow us <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </a>
-            </div>
-          </div>
-        </section>
+        <InstagramShowcase />
 
         {/* FAQ */}
         <section aria-labelledby="faq-title" className="relative overflow-clip bg-[linear-gradient(180deg,#f3ebdd,#ece1cc)] text-walnut">
