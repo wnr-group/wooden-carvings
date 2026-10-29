@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "motion/react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { Reveal } from "@/components/Reveal";
@@ -99,7 +100,14 @@ export function PremiumCollection({ onSelect }: { onSelect: (deity: Deity) => vo
             className="flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4 pr-5 [scrollbar-width:none] sm:pr-8 lg:pr-12 [&::-webkit-scrollbar]:hidden"
           >
             {FEATURED.map((p, i) => (
-              <li key={p.id} className="w-[78%] shrink-0 snap-start sm:w-[46%] lg:w-[44%]">
+              <motion.li
+                key={p.id}
+                initial={{ opacity: 0, x: 60, scale: 0.96 }}
+                whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                viewport={{ once: true, margin: "0px 0px -5% 0px" }}
+                transition={{ duration: 0.8, delay: (i % 3) * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                className="w-[78%] shrink-0 snap-start sm:w-[46%] lg:w-[44%]"
+              >
                 <article className="group relative pb-14">
                   {/* Gallery print: white mat, straight edges, gold corner marks */}
                   <div className="relative bg-paper p-3 shadow-[0_30px_50px_-30px_rgb(73_53_38/0.55)] ring-1 ring-walnut/10 transition-shadow duration-500 group-hover:shadow-[0_40px_60px_-28px_rgb(73_53_38/0.7)] sm:p-4">
@@ -138,7 +146,7 @@ export function PremiumCollection({ onSelect }: { onSelect: (deity: Deity) => vo
                     </a>
                   </div>
                 </article>
-              </li>
+              </motion.li>
             ))}
           </ul>
           <p className="mt-6 flex items-center gap-2 text-xs text-muted-strong lg:hidden">

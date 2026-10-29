@@ -40,7 +40,10 @@ export function SiteHeader({ onHelp, variant = "solid" }: SiteHeaderProps) {
   const onTrack = pathname === "/track";
 
   return (
-    <header
+    <motion.header
+      initial={{ y: -28, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
         "top-0 z-30 w-full transition-[background-color,border-color] duration-500",
         variant === "overlay" ? "fixed" : "sticky",
@@ -132,6 +135,6 @@ export function SiteHeader({ onHelp, variant = "solid" }: SiteHeaderProps) {
           </ul>
         </nav>
       )}
-    </header>
+    </motion.header>
   );
 }

@@ -1,11 +1,13 @@
 "use client";
 
 import { ArrowRight, ChevronDown, Hammer, Leaf, ShieldCheck, Star, Truck } from "lucide-react";
-import { MotionConfig } from "motion/react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { HeroFilm } from "@/components/home/HeroFilm";
+import { BackToTop, Float, GoldRule, ParallaxImage, ScrollMarquee } from "@/components/home/motion";
+import { SmoothScroll } from "@/components/home/SmoothScroll";
 import { PremiumCollection } from "@/components/home/PremiumCollection";
 import { Reveal } from "@/components/Reveal";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -69,7 +71,7 @@ function SectionTitle({ children, id, light }: { children: React.ReactNode; id: 
       )}
     >
       {children}
-      <span className="mx-auto mt-4 block h-px w-24 bg-gradient-to-r from-transparent via-oak to-transparent" />
+      <GoldRule className="mx-auto mt-4 w-24" />
     </h2>
   );
 }
@@ -78,7 +80,16 @@ function Stars() {
   return (
     <span className="flex gap-1 text-oak" aria-label="5 out of 5 stars">
       {Array.from({ length: 5 }).map((_, i) => (
-        <Star key={i} className="h-5 w-5 fill-current" aria-hidden="true" />
+        <motion.span
+          key={i}
+          initial={{ opacity: 0, scale: 0.3, rotate: -40 }}
+          whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.25 + i * 0.09, type: "spring", stiffness: 380, damping: 16 }}
+          className="inline-flex"
+        >
+          <Star className="h-5 w-5 fill-current" aria-hidden="true" />
+        </motion.span>
       ))}
     </span>
   );
@@ -112,6 +123,7 @@ export function HomeExperience() {
 
   return (
     <MotionConfig reducedMotion="user">
+      <SmoothScroll />
       <SiteHeader />
       <main>
         <HeroFilm />
@@ -140,6 +152,7 @@ export function HomeExperience() {
             <ul className="mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-6 [scrollbar-width:none] sm:gap-6 lg:grid lg:grid-cols-6 lg:gap-7 lg:overflow-visible lg:pb-0 [&::-webkit-scrollbar]:hidden">
               {CATEGORY_ARCHES.map((c, i) => (
                 <Reveal as="li" key={c.label} delay={i * 0.07} className="w-[42%] shrink-0 snap-center sm:w-[26%] lg:w-auto">
+                  <Float from={i % 2 ? -16 : 16} to={i % 2 ? 16 : -16}>
                   <a
                     href="#collection"
                     onClick={() => setTab(c.label)}
@@ -149,12 +162,12 @@ export function HomeExperience() {
                     <span className="relative block rounded-t-full border border-oak/70 p-1.5 shadow-[0_24px_40px_-26px_rgb(73_53_38/0.7)] transition-all duration-500 group-hover:-translate-y-2 group-hover:border-walnut group-hover:shadow-[0_34px_50px_-24px_rgb(73_53_38/0.75)]">
                       <span className="relative block aspect-[3/4] overflow-hidden rounded-t-full bg-[#e9dcc6]">
                         {c.src ? (
-                          <Image
+                          <ParallaxImage
                             src={c.src}
                             alt=""
-                            fill
                             sizes="(min-width:1024px) 200px, 40vw"
-                            className="object-cover transition-transform duration-700 group-hover:scale-[1.07]"
+                            strength={6}
+                            className="transition-transform duration-700 group-hover:scale-[1.07]"
                           />
                         ) : (
                           <StatuePlaceholder label={c.label} />
@@ -171,6 +184,7 @@ export function HomeExperience() {
                       Explore <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                     </span>
                   </a>
+                  </Float>
                 </Reveal>
               ))}
             </ul>
@@ -203,13 +217,22 @@ export function HomeExperience() {
                   </button>
                 ))}
               </div>
-              <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                {visible.map((p) => (
-                  <li key={p.id}>
-                    <ProductCard p={p} compact />
-                  </li>
-                ))}
-              </ul>
+              <motion.ul layout className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  {visible.map((p) => (
+                    <motion.li
+                      key={p.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.92, y: 16 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.92 }}
+                      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <ProductCard p={p} compact />
+                    </motion.li>
+                  ))}
+                </AnimatePresence>
+              </motion.ul>
               <p className="mt-6 text-center text-xs text-muted-strong">
                 Sample catalogue. Photographs of each deity statue will be added.
               </p>
@@ -232,9 +255,16 @@ export function HomeExperience() {
             <ul className="mt-12 grid grid-cols-2 gap-8 lg:grid-cols-4">
               {WHY.map(({ icon: Icon, title, text }, i) => (
                 <Reveal as="li" key={title} delay={i * 0.07} className="text-center">
-                  <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-oak/50 text-oak">
+                  <motion.span
+                    initial={{ scale: 0.4, rotate: -30, opacity: 0 }}
+                    whileInView={{ scale: 1, rotate: 0, opacity: 1 }}
+                    whileHover={{ scale: 1.1, rotate: 6 }}
+                    viewport={{ once: true }}
+                    transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.1 + i * 0.1 }}
+                    className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-oak/50 text-oak"
+                  >
                     <Icon className="h-7 w-7" aria-hidden="true" />
-                  </span>
+                  </motion.span>
                   <h3 className="mt-4 font-display text-xl">{title}</h3>
                   <p className="mx-auto mt-1 max-w-[16rem] text-sm leading-relaxed text-ivory/70">{text}</p>
                 </Reveal>
@@ -242,6 +272,8 @@ export function HomeExperience() {
             </ul>
           </div>
         </section>
+
+        <ScrollMarquee words={["Hand carved", "Solid wood", "Heirloom quality", "Made to last"]} />
 
         {/* Reviews */}
         <section id="reviews" aria-labelledby="reviews-title" className="bg-ivory">
@@ -274,7 +306,7 @@ export function HomeExperience() {
             <ul className="mt-12 grid auto-rows-[9rem] grid-cols-4 gap-3 sm:auto-rows-[12rem] lg:auto-rows-[15rem]">
               {INSTA.map((t, i) => (
                 <li key={i} className={cn("group relative overflow-hidden rounded-[4px] bg-stone", t.cls)}>
-                  <Image src={t.src} alt="" fill sizes="(min-width:1024px) 33vw, 50vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <ParallaxImage src={t.src} alt="" sizes="(min-width:1024px) 25vw, 50vw" strength={7} className="transition-transform duration-700 group-hover:scale-105" />
                 </li>
               ))}
             </ul>
@@ -314,11 +346,13 @@ export function HomeExperience() {
               </Link>
             </div>
             <div className="relative hidden aspect-[4/5] overflow-hidden rounded-t-full border-2 border-oak/50 lg:col-span-4 lg:col-start-9 lg:block">
-              <Image src="/images/product.jpg" alt="A traditional dark wooden Ganesha sculpture" fill sizes="380px" className="object-cover" />
+              <ParallaxImage src="/images/product.jpg" alt="A traditional dark wooden Ganesha sculpture" sizes="380px" strength={7} />
             </div>
           </div>
         </section>
       </main>
+
+      <BackToTop />
 
       {/* Footer */}
       <footer className="on-dark bg-[#1d120a] text-ivory">
