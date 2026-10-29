@@ -31,10 +31,7 @@ export function TrackerExperience() {
         <ProductDetails order={order} />
         <DeliveryInfo order={order} />
       </main>
-      <SiteFooter
-        onHelp={() => setSupportOpen(true)}
-        notice="Prototype notice: all orders, names, dates, couriers and tracking references on this page are sample content, not verified customer information. Photographs are illustrative and are not images of any real order."
-      />
+      <SiteFooter onHelp={() => setSupportOpen(true)} />
       <DemoSwitcher value={orderId} onChange={setOrderId} />
       <SupportDialog
         open={supportOpen}
