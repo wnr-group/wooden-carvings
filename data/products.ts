@@ -1,21 +1,31 @@
 /**
- * Sample deity catalogue for the homepage. Names and prices are placeholders.
- * `src` is optional: where a real photograph of that statue hasn't been
- * supplied yet, the UI shows a labelled placeholder instead of a wrong image.
- * To add a photo, drop it in public/images/deities/ and set `src`.
+ * Sample catalogue for the homepage. Names and prices are placeholders.
+ * `src` is optional: where a real photograph of a piece hasn't been supplied
+ * yet, the UI shows a labelled placeholder instead of a wrong image.
+ * To add a photo, drop it in public/images/ and set `src`.
+ *
+ * To add a new kind of piece, add its name to DEITIES or ARTS below, then add
+ * products that use it. The filters on the homepage pick it up automatically.
  */
-export type Deity = "Ganesha" | "Lakshmi" | "Krishna" | "Buddha" | "Hanuman" | "Saraswati";
+export const DEITIES = ["Ganesha", "Lakshmi", "Krishna", "Buddha", "Hanuman", "Saraswati"] as const;
+export const ARTS = ["Apsaras", "Wall Mounts", "Wall Brackets"] as const;
+
+export type Deity = (typeof DEITIES)[number];
+export type Art = (typeof ARTS)[number];
+export type Category = Deity | Art;
 
 export interface Product {
   id: string;
   name: string;
-  category: Deity;
+  category: Category;
   price: number;
   src?: string;
   alt: string;
 }
 
-export const PRODUCT_TABS: ("All" | Deity)[] = ["All", "Ganesha", "Lakshmi", "Krishna", "Buddha", "Hanuman", "Saraswati"];
+export const isDeity = (c: Category): c is Deity => (DEITIES as readonly string[]).includes(c);
+
+export const PRODUCT_TABS: ("All" | Category)[] = ["All", ...DEITIES, ...ARTS];
 
 export const products: Product[] = [
   { id: "p1", name: "Lord Ganesha", category: "Ganesha", price: 18500, src: "/images/product.jpg", alt: "A traditional dark wooden Ganesha sculpture" },
@@ -26,6 +36,12 @@ export const products: Product[] = [
   { id: "p6", name: "Goddess Saraswati", category: "Saraswati", price: 22500, src: "/images/deities/saraswati.webp", alt: "Hand-carved wooden statue of Goddess Saraswati playing the veena, with a swan" },
   { id: "p7", name: "Ganesha, Seated", category: "Ganesha", price: 14200, alt: "Hand-carved wooden seated Ganesha (photo to be added)" },
   { id: "p8", name: "Radha Krishna", category: "Krishna", price: 27500, alt: "Hand-carved wooden Radha Krishna statue (photo to be added)" },
+  { id: "p9", name: "Celestial Apsara", category: "Apsaras", price: 26000, alt: "Hand-carved wooden Apsara dancer (photo to be added)" },
+  { id: "p10", name: "Apsara with Lotus", category: "Apsaras", price: 23500, alt: "Hand-carved wooden Apsara holding a lotus (photo to be added)" },
+  { id: "p11", name: "Floral Wall Panel", category: "Wall Mounts", price: 15500, alt: "Hand-carved wooden floral wall panel (photo to be added)" },
+  { id: "p12", name: "Temple Scene Wall Mount", category: "Wall Mounts", price: 32000, alt: "Hand-carved wooden temple scene wall mount (photo to be added)" },
+  { id: "p13", name: "Carved Corner Bracket", category: "Wall Brackets", price: 6800, alt: "Hand-carved wooden corner bracket (photo to be added)" },
+  { id: "p14", name: "Scroll Wall Bracket, Pair", category: "Wall Brackets", price: 9400, alt: "A pair of hand-carved wooden scroll wall brackets (photo to be added)" },
 ];
 
 export const CATEGORY_ARCHES: { label: Deity; src?: string }[] = [

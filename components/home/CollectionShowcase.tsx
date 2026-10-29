@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 import { StatuePlaceholder } from "@/components/home/StatuePlaceholder";
 import { Reveal } from "@/components/Reveal";
-import { PRODUCT_TABS, products } from "@/data/products";
+import { ARTS, DEITIES, PRODUCT_TABS, isDeity, products } from "@/data/products";
 import { cn } from "@/lib/cn";
 
 const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
@@ -17,6 +17,9 @@ const PAGE_SIZE = 12;
 
 type Tab = (typeof PRODUCT_TABS)[number];
 type Sort = "featured" | "low" | "high";
+
+/** Top-level groups: everything, all deities (with sub-filters), or one kind of art. */
+const GROUPS = ["All", "Deities", ...ARTS] as const;
 
 const SORTS: { value: Sort; label: string }[] = [
   { value: "featured", label: "Featured" },
@@ -32,20 +35,34 @@ const SORTS: { value: Sort; label: string }[] = [
 export function CollectionShowcase({ tab, onTab }: { tab: Tab; onTab: (t: Tab) => void }) {
   const [sort, setSort] = useState<Sort>("featured");
   const [shown, setShown] = useState(PAGE_SIZE);
+  // "All" with scope "deities" means every deity; the parent only tracks the specific tab.
+  const [scope, setScope] = useState<"all" | "deities">("all");
+
+  const group: (typeof GROUPS)[number] =
+    tab === "All" ? (scope === "deities" ? "Deities" : "All") : isDeity(tab) ? "Deities" : tab;
 
   const results = useMemo(() => {
-    const list = tab === "All" ? [...products] : products.filter((p) => p.category === tab);
+    let list = [...products];
+    if (tab !== "All") list = products.filter((p) => p.category === tab);
+    else if (scope === "deities") list = products.filter((p) => isDeity(p.category));
     if (sort === "low") list.sort((a, b) => a.price - b.price);
     if (sort === "high") list.sort((a, b) => b.price - a.price);
     return list;
-  }, [tab, sort]);
+  }, [tab, scope, sort]);
 
   const visible = results.slice(0, shown);
   const remaining = results.length - visible.length;
 
-  function choose(t: Tab) {
+  function chooseGroup(g: (typeof GROUPS)[number]) {
     setShown(PAGE_SIZE);
-    onTab(t);
+    setScope(g === "Deities" ? "deities" : "all");
+    onTab(g === "All" || g === "Deities" ? "All" : g);
+  }
+
+  function chooseDeity(d: "All deities" | (typeof DEITIES)[number]) {
+    setShown(PAGE_SIZE);
+    setScope("deities");
+    onTab(d === "All deities" ? "All" : d);
   }
 
   return (
@@ -62,28 +79,28 @@ export function CollectionShowcase({ tab, onTab }: { tab: Tab; onTab: (t: Tab) =
             The Complete <em className="text-[#9a6a2a]">Collection</em>
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-sm leading-relaxed text-muted-strong">
-            Every statue is carved by hand from solid wood. Browse by deity, or see the whole range.
+            Every piece is carved by hand from solid wood. Browse deities, apsaras and wall art, or see the whole range.
           </p>
         </Reveal>
 
         {/* Sticky filter and sort bar */}
         <div className="sticky top-[4.5rem] z-20 -mx-5 mt-14 border-y border-walnut/10 bg-paper/90 px-5 py-4 backdrop-blur-md sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div role="group" aria-label="Filter by deity" className="flex flex-wrap gap-x-1 gap-y-1">
-              {PRODUCT_TABS.map((t) => {
-                const on = tab === t;
+            <div role="group" aria-label="Filter by category" className="flex flex-wrap gap-x-1 gap-y-1">
+              {GROUPS.map((g) => {
+                const on = group === g;
                 return (
                   <button
-                    key={t}
+                    key={g}
                     type="button"
                     aria-pressed={on}
-                    onClick={() => choose(t)}
+                    onClick={() => chooseGroup(g)}
                     className={cn(
                       "relative inline-flex min-h-11 items-center gap-1.5 px-4 text-sm transition-colors",
                       on ? "text-walnut" : "text-walnut/55 hover:text-walnut",
                     )}
                   >
-                    {t}
+                    {g}
                     {on && (
                       <motion.span
                         layoutId="filter-underline"
@@ -118,6 +135,41 @@ export function CollectionShowcase({ tab, onTab }: { tab: Tab; onTab: (t: Tab) =
               </label>
             </div>
           </div>
+
+          <AnimatePresence initial={false}>
+            {group === "Deities" && (
+              <motion.div
+                key="deity-sub"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.4, ease: EASE }}
+                className="overflow-hidden"
+              >
+                <div role="group" aria-label="Filter by deity" className="flex flex-wrap gap-2 pt-3">
+                  {(["All deities", ...DEITIES] as const).map((d) => {
+                    const on = d === "All deities" ? tab === "All" : tab === d;
+                    return (
+                      <button
+                        key={d}
+                        type="button"
+                        aria-pressed={on}
+                        onClick={() => chooseDeity(d)}
+                        className={cn(
+                          "inline-flex min-h-9 items-center rounded-full border px-4 text-xs transition-colors",
+                          on
+                            ? "border-walnut bg-walnut text-ivory"
+                            : "border-walnut/20 text-walnut/70 hover:border-walnut hover:text-walnut",
+                        )}
+                      >
+                        {d}
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Grid */}

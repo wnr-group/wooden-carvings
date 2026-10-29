@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { Reveal } from "@/components/Reveal";
-import { products, type Deity } from "@/data/products";
+import { products, type Category } from "@/data/products";
 import { cn } from "@/lib/cn";
 
 const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
@@ -14,7 +14,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
 /** Pieces that have a real photograph. */
 const FEATURED = products.filter((p) => p.src);
 
-export function PremiumCollection({ onSelect }: { onSelect: (deity: Deity) => void }) {
+export function PremiumCollection({ onSelect }: { onSelect: (category: Category) => void }) {
   const track = useRef<HTMLUListElement>(null);
   const [active, setActive] = useState(0);
 

@@ -3,7 +3,7 @@ export function StatuePlaceholder({ label }: { label: string }) {
   return (
     <span
       role="img"
-      aria-label={`${label} statue, photo coming soon`}
+      aria-label={`${label}, photo coming soon`}
       className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-[linear-gradient(160deg,#efe4d1,#d6bf9d)] text-walnut/70"
     >
       <span aria-hidden="true" className="font-display text-5xl leading-none">
