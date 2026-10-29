@@ -150,24 +150,65 @@ export function HomeExperience() {
       <main>
         <HeroFilm />
 
-        {/* Arch categories */}
-        <section aria-label="Shop by deity" className="bg-ivory">
-          <ul className="mx-auto flex max-w-[1320px] gap-6 overflow-x-auto px-5 py-12 sm:justify-center sm:px-8 lg:gap-10 lg:px-12 [scrollbar-width:none]">
-            {CATEGORY_ARCHES.map((c, i) => (
-              <Reveal as="li" key={c.label} delay={i * 0.05} className="shrink-0 text-center">
-                <Link href="/#collection" className="group block">
-                  <span className="relative mx-auto block h-32 w-24 overflow-hidden rounded-t-full border-2 border-oak/60 bg-stone transition-colors group-hover:border-walnut sm:h-40 sm:w-28">
-                    {c.src ? (
-                      <Image src={c.src} alt="" fill sizes="112px" className="object-cover transition-transform duration-500 group-hover:scale-110" />
-                    ) : (
-                      <StatuePlaceholder label={c.label} />
-                    )}
-                  </span>
-                  <span className="mt-3 block text-xs font-medium uppercase tracking-[0.18em] text-walnut">{c.label}</span>
-                </Link>
-              </Reveal>
-            ))}
-          </ul>
+        {/* Shop by deity */}
+        <section
+          aria-labelledby="deity-title"
+          className="relative overflow-hidden bg-[radial-gradient(ellipse_70%_60%_at_50%_0%,#f3e9d8,transparent),linear-gradient(180deg,#faf6ee,#f3ece0)]"
+        >
+          <div className="mx-auto max-w-[1320px] px-5 pb-16 pt-16 sm:px-8 lg:px-12 lg:pb-24 lg:pt-24">
+            <Reveal className="text-center">
+              <p className="text-[0.7rem] font-medium uppercase tracking-[0.38em] text-oak">Divine Collection</p>
+              <h2 id="deity-title" className="mt-4 font-display text-4xl leading-[1.05] tracking-tight text-walnut sm:text-5xl lg:text-6xl">
+                Shop by <em className="text-oak">deity</em>
+              </h2>
+              <span aria-hidden="true" className="mx-auto mt-6 flex items-center justify-center gap-3 text-oak">
+                <span className="h-px w-16 bg-gradient-to-r from-transparent to-oak" />
+                <span className="h-1.5 w-1.5 rotate-45 bg-oak" />
+                <span className="h-px w-16 bg-gradient-to-l from-transparent to-oak" />
+              </span>
+              <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-muted-strong">
+                Each sacred form is carved by hand from a single block of seasoned wood.
+              </p>
+            </Reveal>
+
+            <ul className="mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-6 [scrollbar-width:none] sm:gap-6 lg:grid lg:grid-cols-6 lg:gap-7 lg:overflow-visible lg:pb-0 [&::-webkit-scrollbar]:hidden">
+              {CATEGORY_ARCHES.map((c, i) => (
+                <Reveal as="li" key={c.label} delay={i * 0.07} className="w-[42%] shrink-0 snap-center sm:w-[26%] lg:w-auto">
+                  <a
+                    href="#collection"
+                    onClick={() => setTab(c.label)}
+                    aria-label={`View ${c.label} statues`}
+                    className="group block text-center"
+                  >
+                    <span className="relative block rounded-t-full border border-oak/70 p-1.5 shadow-[0_24px_40px_-26px_rgb(73_53_38/0.7)] transition-all duration-500 group-hover:-translate-y-2 group-hover:border-walnut group-hover:shadow-[0_34px_50px_-24px_rgb(73_53_38/0.75)]">
+                      <span className="relative block aspect-[3/4] overflow-hidden rounded-t-full bg-[#e9dcc6]">
+                        {c.src ? (
+                          <Image
+                            src={c.src}
+                            alt=""
+                            fill
+                            sizes="(min-width:1024px) 200px, 40vw"
+                            className="object-cover transition-transform duration-700 group-hover:scale-[1.07]"
+                          />
+                        ) : (
+                          <StatuePlaceholder label={c.label} />
+                        )}
+                        <span
+                          aria-hidden="true"
+                          className="absolute inset-0 bg-gradient-to-t from-[#2c1b10]/35 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                        />
+                      </span>
+                    </span>
+                    <span className="mt-5 block font-display text-2xl leading-none text-walnut">{c.label}</span>
+                    <span className="mx-auto mt-3 block h-px w-8 bg-oak transition-all duration-500 group-hover:w-16" />
+                    <span className="mt-3 inline-flex items-center gap-1 text-[0.65rem] font-medium uppercase tracking-[0.24em] text-muted-strong opacity-80 transition-colors group-hover:text-walnut">
+                      Explore <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                    </span>
+                  </a>
+                </Reveal>
+              ))}
+            </ul>
+          </div>
         </section>
 
         {/* Premium collection */}
