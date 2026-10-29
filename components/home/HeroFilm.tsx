@@ -20,7 +20,7 @@ export function HeroFilm() {
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(243,236,226,0.8),rgba(246,241,233,0.9)_55%,rgba(250,247,242,0.96))]"
+          className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_45%_50%_at_50%_55%,rgba(23,15,8,0.5),transparent_75%)]"
         />
 
         {/* Carved beam, then the pillars on top so the corner brackets overlap it */}
@@ -47,16 +47,16 @@ export function HeroFilm() {
           <Reveal>
             <h1
               id="film-title"
-              className="font-display text-[clamp(1.5rem,5vw,4rem)] font-semibold uppercase leading-tight tracking-[0.02em] text-walnut"
+              className="font-display text-[clamp(1.5rem,5vw,4rem)] font-normal uppercase leading-tight tracking-[0.02em] text-ivory [text-shadow:0_2px_20px_rgb(0_0_0/0.7)]"
             >
               VK Door &amp; Hardwares
             </h1>
-            <p className="mt-1 text-[clamp(0.6rem,1.8vw,1.15rem)] uppercase tracking-[0.34em] text-walnut/85 sm:mt-3">
+            <p className="mt-1 font-sans text-[clamp(0.6rem,1.8vw,1.15rem)] uppercase tracking-[0.34em] text-ivory [text-shadow:0_1px_12px_rgb(0_0_0/0.75)] sm:mt-3">
               Handcrafted Sculpture
             </p>
             <Link
               href="/#collection"
-              className="mt-4 inline-flex h-9 items-center rounded-full bg-walnut px-6 text-[0.7rem] font-medium text-ivory transition-colors hover:bg-charcoal sm:mt-7 sm:h-12 sm:px-9 sm:text-sm"
+              className="mt-4 inline-flex h-9 items-center font-sans rounded-full border border-ivory/60 bg-walnut/90 px-6 text-[0.7rem] font-medium text-ivory transition-colors hover:bg-charcoal sm:mt-7 sm:h-12 sm:px-9 sm:text-sm"
             >
               Explore The Collection
             </Link>
