@@ -1,7 +1,7 @@
 "use client";
 
-import { ArrowRight, ChevronDown, Star } from "lucide-react";
-import { MotionConfig, motion } from "motion/react";
+import { ArrowRight, ChevronDown } from "lucide-react";
+import { MotionConfig } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
 import { HeroFilm } from "@/components/home/HeroFilm";
@@ -9,6 +9,7 @@ import { BackToTop, Float, GoldRule, ParallaxImage, ScrollMarquee } from "@/comp
 import { SmoothScroll } from "@/components/home/SmoothScroll";
 import { CollectionShowcase } from "@/components/home/CollectionShowcase";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
+import { ReviewsMarquee } from "@/components/home/ReviewsMarquee";
 import { StatuePlaceholder } from "@/components/home/StatuePlaceholder";
 import { PremiumCollection } from "@/components/home/PremiumCollection";
 import { Reveal } from "@/components/Reveal";
@@ -20,11 +21,6 @@ import { cn } from "@/lib/cn";
 
 
 
-const REVIEWS = [
-  { name: "Sample reviewer", text: "The carving detail is extraordinary. It feels like a piece with a soul, and the finish is flawless." },
-  { name: "Sample reviewer", text: "Loved following each stage of the making. The packaging was careful and the idol arrived perfectly." },
-  { name: "Sample reviewer", text: "Beautiful craftsmanship and warm, responsive service from start to finish." },
-];
 
 const FAQS = [
   { q: "How long does a carved piece take to make?", a: "Most pieces take several weeks, depending on size and detail. You can follow every stage on the tracking page." },
@@ -55,24 +51,6 @@ function SectionTitle({ children, id, light }: { children: React.ReactNode; id: 
   );
 }
 
-function Stars() {
-  return (
-    <span className="flex gap-1 text-oak" aria-label="5 out of 5 stars">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <motion.span
-          key={i}
-          initial={{ opacity: 0, scale: 0.3, rotate: -40 }}
-          whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.25 + i * 0.09, type: "spring", stiffness: 380, damping: 16 }}
-          className="inline-flex"
-        >
-          <Star className="h-5 w-5 fill-current" aria-hidden="true" />
-        </motion.span>
-      ))}
-    </span>
-  );
-}
 
 export function HomeExperience() {
   const [tab, setTab] = useState<(typeof PRODUCT_TABS)[number]>("All");
@@ -155,27 +133,7 @@ export function HomeExperience() {
 
         <ScrollMarquee words={["Hand carved", "Solid wood", "Heirloom quality", "Made to last"]} />
 
-        {/* Reviews */}
-        <section id="reviews" aria-labelledby="reviews-title" className="bg-ivory">
-          <div className="mx-auto max-w-[1320px] px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
-            <Reveal>
-              <SectionTitle id="reviews-title">What Our Customers Say</SectionTitle>
-            </Reveal>
-            <ul className="mt-12 grid gap-6 md:grid-cols-3">
-              {REVIEWS.map((r, i) => (
-                <Reveal as="li" key={i} delay={i * 0.08} className="rounded-[8px] border border-stone bg-paper p-7 shadow-[0_20px_40px_-28px_rgb(73_53_38/0.5)]">
-                  <Stars />
-                  <p className="mt-4 text-sm leading-relaxed text-muted-strong">{r.text}</p>
-                  <p className="mt-5 flex items-center justify-between text-sm font-medium text-walnut">
-                    {r.name}
-                    <span className="text-xs font-normal text-muted">Google review</span>
-                  </p>
-                </Reveal>
-              ))}
-            </ul>
-            <p className="mt-6 text-center text-xs text-muted-strong">Sample reviews. Replace with verified customer reviews.</p>
-          </div>
-        </section>
+        <ReviewsMarquee />
 
         {/* Instagram */}
         <section aria-labelledby="insta-title" className="bg-paper">

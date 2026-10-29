@@ -141,3 +141,22 @@ dialog.sheet[open]::backdrop {
     display: none;
   }
 }
+
+/* Auto-scrolling review rows. Pause on hover/focus or when the pause button is on. */
+@keyframes review-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.review-track {
+  animation: review-scroll 80s linear infinite;
+}
+.review-row:hover .review-track,
+.review-row:focus-within .review-track,
+.review-row[data-paused="true"] .review-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .review-track {
+    animation: none;
+  }
+}
