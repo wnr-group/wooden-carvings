@@ -8,8 +8,8 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
-import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { FadeImage } from "@/components/FadeImage";
 import { cn } from "@/lib/cn";
 
 /** Image that drifts slowly inside its frame as the page scrolls. Fills a `relative` parent. */
@@ -32,12 +32,12 @@ export function ParallaxImage({
   const y = useTransform(scrollYProgress, [0, 1], [`-${strength}%`, `${strength}%`]);
 
   return (
-    <div ref={ref} className="absolute inset-0 overflow-hidden">
+    <div ref={ref} className="skeleton absolute inset-0 overflow-hidden">
       <motion.div
         style={reduce ? undefined : { y, scale: 1 + (strength * 2) / 100 + 0.02 }}
         className="absolute inset-0"
       >
-        <Image src={src} alt={alt} fill sizes={sizes} className={cn("object-cover", className)} />
+        <FadeImage src={src} alt={alt} fill sizes={sizes} className={cn("object-cover", className)} />
       </motion.div>
     </div>
   );

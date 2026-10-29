@@ -2,8 +2,8 @@
 
 import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
-import Image from "next/image";
 import { useRef, useState } from "react";
+import { FadeImage } from "@/components/FadeImage";
 import { Reveal } from "@/components/Reveal";
 import { products, type Category } from "@/data/products";
 import { cn } from "@/lib/cn";
@@ -111,8 +111,8 @@ export function PremiumCollection({ onSelect }: { onSelect: (category: Category)
                 <article className="group relative pb-14">
                   {/* Gallery print: white mat, straight edges, gold corner marks */}
                   <div className="relative bg-paper p-3 shadow-[0_30px_50px_-30px_rgb(73_53_38/0.55)] ring-1 ring-walnut/10 transition-shadow duration-500 group-hover:shadow-[0_40px_60px_-28px_rgb(73_53_38/0.7)] sm:p-4">
-                    <div className="relative aspect-[4/5] overflow-hidden bg-[#e9dcc6]">
-                      <Image
+                    <div className="skeleton relative aspect-[4/5] overflow-hidden">
+                      <FadeImage
                         src={p.src!}
                         alt={p.alt}
                         fill

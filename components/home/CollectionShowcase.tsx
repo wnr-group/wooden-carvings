@@ -2,8 +2,8 @@
 
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import Image from "next/image";
 import { useMemo, useState } from "react";
+import { FadeImage } from "@/components/FadeImage";
 import { StatuePlaceholder } from "@/components/home/StatuePlaceholder";
 import { Reveal } from "@/components/Reveal";
 import { ARTS, DEITIES, PRODUCT_TABS, isDeity, products } from "@/data/products";
@@ -185,9 +185,9 @@ export function CollectionShowcase({ tab, onTab }: { tab: Tab; onTab: (t: Tab) =
                 transition={{ duration: 0.6, delay: (i % 4) * 0.06, ease: EASE }}
               >
                 <article className="group relative">
-                  <div className="relative aspect-[4/5] overflow-hidden bg-[#ece1cc]">
+                  <div className="skeleton relative aspect-[4/5] overflow-hidden">
                     {p.src ? (
-                      <Image
+                      <FadeImage
                         src={p.src}
                         alt={p.alt}
                         fill
