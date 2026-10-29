@@ -17,10 +17,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Order Tracking | VK Wood Carvings",
+  title: { default: "VK Wood Carvings | Hand-carved wooden sculptures", template: "%s" },
   description:
-    "Follow the journey of your handcrafted piece from workshop to doorstep. Prototype with sample data.",
-  robots: { index: false, follow: false },
+    "Heirloom wood carvings, shaped slowly by hand from solid wood. Commission a piece and follow every stage of its making.",
 };
 
 export const viewport: Viewport = {

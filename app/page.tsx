@@ -1,5 +1,5 @@
-import { TrackerExperience } from "@/components/TrackerExperience";
+import { HomeExperience } from "@/components/home/HomeExperience";
 
 export default function Page() {
-  return <TrackerExperience />;
+  return <HomeExperience />;
 }

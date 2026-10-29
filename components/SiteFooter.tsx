@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { galleryItems } from "@/data/gallery";
 import { Wordmark } from "@/components/Wordmark";
 import type { PhotoCredit } from "@/types/order";
@@ -6,7 +7,7 @@ const credits: { label: string; credit: PhotoCredit }[] = [
   ...galleryItems.map((g) => ({ label: g.title, credit: g.credit })),
 ];
 
-export function SiteFooter({ onHelp }: { onHelp: () => void }) {
+export function SiteFooter({ onHelp }: { onHelp?: () => void }) {
   return (
     <footer className="on-dark bg-[#2c1b10] text-ivory">
       <div className="mx-auto max-w-[1320px] px-5 py-16 sm:px-8 lg:px-12 lg:py-20">
@@ -23,18 +24,23 @@ export function SiteFooter({ onHelp }: { onHelp: () => void }) {
             aria-label="Footer"
             className="flex flex-col items-start gap-3 text-sm lg:col-span-3 lg:col-start-8"
           >
-            <a href="#status" className="text-ivory/80 hover:text-ivory">
-              Back to top
-            </a>
-            <a href="#journey" className="text-ivory/80 hover:text-ivory">
-              Order progress
-            </a>
-            <a href="#delivery" className="text-ivory/80 hover:text-ivory">
-              Delivery
-            </a>
-            <button type="button" onClick={onHelp} className="text-ivory/80 hover:text-ivory">
-              Help with your order
-            </button>
+            <Link href="/" className="text-ivory/80 hover:text-ivory">
+              Home
+            </Link>
+            <Link href="/#collection" className="text-ivory/80 hover:text-ivory">
+              Collection
+            </Link>
+            <Link href="/#reviews" className="text-ivory/80 hover:text-ivory">
+              Reviews
+            </Link>
+            <Link href="/track" className="text-ivory/80 hover:text-ivory">
+              Track your order
+            </Link>
+            {onHelp && (
+              <button type="button" onClick={onHelp} className="text-ivory/80 hover:text-ivory">
+                Help with your order
+              </button>
+            )}
           </nav>
         </div>
 

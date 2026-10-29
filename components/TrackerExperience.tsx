@@ -4,8 +4,6 @@ import { MotionConfig } from "motion/react";
 import { useState } from "react";
 import { DeliveryInfo } from "@/components/DeliveryInfo";
 import { DemoSwitcher } from "@/components/DemoSwitcher";
-import { Gallery } from "@/components/Gallery";
-import { HeroFilm } from "@/components/HeroFilm";
 import { ProductDetails } from "@/components/ProductDetails";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -27,13 +25,11 @@ export function TrackerExperience() {
       >
         Skip to order status
       </a>
-      <SiteHeader onHelp={() => setSupportOpen(true)} />
+      <SiteHeader variant="solid" onHelp={() => setSupportOpen(true)} />
       <main>
-        <HeroFilm />
         <Tracker order={order} onHelp={() => setSupportOpen(true)} />
         <ProductDetails order={order} />
         <DeliveryInfo order={order} />
-        <Gallery />
       </main>
       <SiteFooter onHelp={() => setSupportOpen(true)} />
       <DemoSwitcher value={orderId} onChange={setOrderId} />
